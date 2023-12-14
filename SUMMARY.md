@@ -1,9 +1,1 @@
-* 恋爱心理学
-  * [课程](lovePsychology/课程.md)
-  * [爱情开张](lovePsychology/爱情开张.md)
-  * [脱单与搭讪](lovePsychology/脱单与搭讪.md)
-  * [友谊与备胎](lovePsychology/友谊与备胎.md)
-  * [追星与偶像](lovePsychology/追星与偶像.md)
-  * [婚姻与爱情能平衡么](lovePsychology/婚姻与爱情能平衡么.md)
-  * [失恋是一种病](lovePsychology/失恋是一种病.md)
 * [《人月神话》](MMM/人月神话.md)
