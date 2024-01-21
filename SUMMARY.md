@@ -3,6 +3,8 @@
 * [《你的灯亮着吗》](AYLO/你的灯亮着吗.md)
 * [《影响力》](influence/影响力.md)
 * [《C++ 101编程规范》](CPP101/C++101编程规范.md)
+* [《Git使用》](Git/Git使用.md)
+* [《从优秀到卓越》](GoodToGreat/从优秀到卓越.md)
 * 《代码大全》
   * [32.自说明代码](CodeComplete/32.自说明代码.md)
 * [装机](computer/装机.md)

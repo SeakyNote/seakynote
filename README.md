@@ -13,6 +13,10 @@
 
 [《C++ 101编程规范》](CPP101/C++101编程规范.md)
 
+[《Git使用》](Git/Git使用.md)
+
+[《从优秀到卓越》](GoodToGreat/从优秀到卓越.md)
+
 [装机](computer/装机.md)
 
 [招聘初步研究](recruit/招聘初步研究.md)
