@@ -9,3 +9,5 @@
   * [32.自说明代码](CodeComplete/32.自说明代码.md)
 * [装机](computer/装机.md)
 * [招聘初步研究](recruit/招聘初步研究.md)
+* 恋爱心理学
+  * [课程](PsychologyOfLove/课程.md)
