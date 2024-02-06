@@ -11,3 +11,6 @@
 * [招聘初步研究](recruit/招聘初步研究.md)
 * 恋爱心理学
   * [课程](PsychologyOfLove/课程.md)
+  * [爱情开张](PsychologyOfLove/爱情开张.md)
+  * [脱单与搭讪](PsychologyOfLove/脱单与搭讪.md)
+  * [友谊与备胎](PsychologyOfLove/友谊与备胎.md)
