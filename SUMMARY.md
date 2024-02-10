@@ -14,3 +14,5 @@
   * [爱情开张](PsychologyOfLove/爱情开张.md)
   * [脱单与搭讪](PsychologyOfLove/脱单与搭讪.md)
   * [友谊与备胎](PsychologyOfLove/友谊与备胎.md)
+  * [婚姻和爱情能平衡么](PsychologyOfLove/婚姻和爱情能平衡么.md)
+  * [失恋是一种病](PsychologyOfLove/失恋是一种病.md)
