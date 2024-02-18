@@ -5,10 +5,14 @@
 * [《C++ 101编程规范》](CPP101/C++101编程规范.md)
 * [《Git使用》](Git/Git使用.md)
 * [《从优秀到卓越》](GoodToGreat/从优秀到卓越.md)
+* [装机](computer/装机.md)
 * 《代码大全》
   * [32.自说明代码](CodeComplete/32.自说明代码.md)
-* [装机](computer/装机.md)
-* [招聘初步研究](recruit/招聘初步研究.md)
+* 招聘
+  * [招聘初步研究](recruit/招聘初步研究.md)
+  * 面试
+    * [技术问题](recruit/技术问题.md)
+    * [非技术问题](recruit/非技术问题.md)
 * 恋爱心理学
   * [课程](PsychologyOfLove/课程.md)
   * [爱情开张](PsychologyOfLove/爱情开张.md)
