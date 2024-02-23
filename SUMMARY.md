@@ -6,6 +6,7 @@
 * [《Git使用》](Git/Git使用.md)
 * [《从优秀到卓越》](GoodToGreat/从优秀到卓越.md)
 * [装机](computer/装机.md)
+* [linux经验](Linux/experience.md)
 * 《代码大全》
   * [32.自说明代码](CodeComplete/32.自说明代码.md)
 * 招聘
