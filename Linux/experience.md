@@ -82,7 +82,7 @@ debtap
 
 snipaste——Spectacle截图工具
 
-xmind——xmind, minder
+xmind——OK
 
 everything——catfish，默认搜索
 
