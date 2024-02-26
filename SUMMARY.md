@@ -7,6 +7,19 @@
 * [《从优秀到卓越》](GoodToGreat/从优秀到卓越.md)
 * [装机](computer/装机.md)
 * [linux经验](Linux/experience.md)
+* 《学会提问》
+  * [正确提问的益处和方法](AskingRightQuestions/正确提问的益处和方法.md)
+  * [论题和结论是什么](AskingRightQuestions/论题和结论是什么.md)
+  * [理由是什么](AskingRightQuestions/理由是什么.md)
+  * [哪些词语意思不明确](AskingRightQuestions/哪些词语意思不明确.md)
+  * [价值观假设和描述性假设是什么](AskingRightQuestions/价值观假设和描述性假设是什么.md)
+  * [***论证中有没有谬误***](AskingRightQuestions/论证中有没有谬误.md)
+  * [证据的效力](AskingRightQuestions/证据的效力.md)
+  * [有没有替代原因](AskingRightQuestions/有没有替代原因.md)
+  * [数据有没有欺骗性](AskingRightQuestions/数据有没有欺骗性.md)
+  * [有什么重要信息被省略了](AskingRightQuestions/有什么重要信息被省略了.md)
+  * [能得出哪些合理的结论](AskingRightQuestions/能得出哪些合理的结论.md)
+  * [干扰批判性思维的障碍](AskingRightQuestions/干扰批判性思维的障碍.md)
 * 《代码大全》
   * [32.自说明代码](CodeComplete/32.自说明代码.md)
 * 招聘
