@@ -78,6 +78,10 @@ debtap
 
 转pem——https://blog.csdn.net/swallowcosmos/article/details/103353721
 
+#### 找到某软件的配置文件
+
+`locate kchmviewer`
+
 ### 家用软件
 
 snipaste——Spectacle截图工具
