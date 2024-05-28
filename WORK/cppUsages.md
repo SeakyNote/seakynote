@@ -145,3 +145,124 @@ std::string narrowStr = "Hello, World!";
 std::wstring wideStr;
 std::copy(narrowStr.begin(), narrowStr.end(), std::back_inserter(wideStr));
 ```
+
+## 找到vector中的最大值
+
+max_element
+
+删除该元素	erase(it)
+
+## 最小堆
+
+priority_queue<int, vector<int>, greater<int>>
+
+push
+
+top返回最小值
+
+pop弹出最小值
+
+## `vector<int>`搜索某项
+
+```c++
+auto it = std::find(numbers.begin(), numbers.end(), searchItem);
+
+while (it != numbers.end()) {
+    std::cout << "Item found at index: " << std::distance(numbers.begin(), it) << std::endl;
+    it = std::find(std::next(it), numbers.end(), searchItem);
+}
+```
+
+```c++
+while (it != numbers.end()) {
+    // 计算迭代器的位置（索引）
+    int index = std::distance(numbers.begin(), it);
+    std::cout << "Item found at index: " << index << std::endl;
+
+    // 继续搜索下一个匹配项
+    it = std::find(std::next(it), numbers.end(), searchItem);
+}
+```
+
+## vector截取原始向量一段
+
+`std::vector<int> subVector(originalVector.begin() + startIndex, originalVector.begin() + endIndex + 1);`
+
+## 标准库函数对象
+
+例子，降序排列
+
+`sort(svec.begin(), svec.end(), greater<string>());`
+
+## 按值传递还是引用传递
+
+当 sizeof(ObjectType) > 2 * sizeof(void*) 时要求引用传递，否则要求值传递
+
+https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rf-conventional
+
+## bitset用法
+
+初始化bitset `bitset<32> curbs(num);`
+
+bitset遍历 `for (int i = 0; i < curbs.size(); ++i)`
+
+检查某位是否为1 `if (curbs.test(i))`
+
+修改某位为1 `b[i] = true;`
+
+bitset转数字 `retVal = b.to_ulong();`
+
+##  位运算
+
+二进制第i位是否为1 `if ((num >> i) & 1)`
+
+将二进制第i位设置为1 `ans |= 1 << i;` 位左移运算符 << 的优先级比位或运算符 | 更高
+
+## 输出运行时间
+
+```
+#define OutputTime														\
+	qDebug()<<"//---------------calc time------------------------\n"	\
+			<<__func__<<" "<<__LINE__<<" "								\
+            <<QTime::currentTime().toString("hh:mm:ss.zzz")    
+```
+
+## string操作
+
+统计string中字符1出现的次数 `int cnt = count(s.begin(), s.end(), '1');`
+
+由n个重复字符构造 `string s4(10, 'c'); // s4 is cccccccccc`
+
+## 直接获得vector首尾元素
+
+v.front()
+
+v.back()
+
+## c++头文件中的宏定义应该放在前置声明之前还是之后？
+
+在C++头文件中，通常建议将宏定义放在前置声明之前。这是因为宏定义可能会影响到后续的代码，包括前置声明。通过将宏定义放在前置声明之前，可以确保在进行前置声明时，宏已经被正确定义，从而避免潜在的错误或不一致性。
+
+例如，一个典型的C++头文件可能包括以下内容的顺序：
+
+1. 头文件保护宏（例如 `#ifndef`、`#define`、`#endif`）
+2. 其他头文件的引用（例如 `#include <iostream>`）
+3. 宏定义（例如 `#define MAX_SIZE 100`）
+4. 类或函数的前置声明（例如 `class MyClass;`）
+5. 类或函数的实际定义
+
+这种顺序可以确保在进行前置声明时，宏已经被正确定义，从而提高代码的可读性和可维护性。
+
+## 枚举可以不初始化吗
+
+与int一样，必须初始化
+
+https://stackoverflow.com/questions/6842799/enum-variable-default-value
+
+## 预处理变量大小写
+
+Preprocessor variables, including names of header guards, must be unique throughout the program. Typically we ensure uniqueness by basing the guard’s name on the name of a class in the header. To avoid name clashes with other entities in our programs, preprocessor variables usually are written in all uppercase.
+
+## c++中为什么push_back({1,2})可以，emplace_back({1,2})会报错?
+
+https://www.zhihu.com/question/438004429

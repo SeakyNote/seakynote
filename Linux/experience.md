@@ -30,7 +30,7 @@
 #### 缩放
 
 - gnome——仅整数倍，workaround `sudo pacman -S mutter-x11-scaling gnome-control-center-x11-scaling`
-- kde——自带缩放
+- kde——自带缩放；缩放1.5倍右侧可能有白边，调整成1.25/1.6倍
 - xfce——https://seekstar.github.io/2023/02/23/xfce%E9%AB%98%E5%88%86%E5%B1%8F%E7%BC%A9%E6%94%BE/
 
 #### 输入法
@@ -38,6 +38,8 @@
 https://www.jianshu.com/p/1b3def9435b6
 
 错误: 无法读取数据库 'extra' (Damaged tar archive)——源不对
+
+在X11上会有吞字现象，在Wayland上则没有
 
 #### 如何禁止自动回到欢迎界面
 
