@@ -59,3 +59,8 @@ add_compile_options("/utf-8")
 https://blog.csdn.net/huashuolin001/article/details/95620424
 
 https://blog.csdn.net/xiliang_pan/article/details/7081395
+
+## 无法解析的外部符号 static struct QMetaObject问题
+
+cmake未将头文件加入源码
+

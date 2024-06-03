@@ -137,3 +137,5 @@ https://blog.csdn.net/weixin_32155265/article/details/128054373
 https://www.cnblogs.com/dbai/p/17249494.html
 
 https://blog.csdn.net/qq_51470638/article/details/129101424
+
+## 编译时注意项目内的build是否会有影响，尤其是对于批处理编译的情况

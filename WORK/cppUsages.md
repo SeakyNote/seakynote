@@ -266,3 +266,7 @@ Preprocessor variables, including names of header guards, must be unique through
 ## c++中为什么push_back({1,2})可以，emplace_back({1,2})会报错?
 
 https://www.zhihu.com/question/438004429
+
+## include guard vs pragma once
+
+https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rs-guards

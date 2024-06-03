@@ -58,3 +58,11 @@ exit
 ## bat调bat
 
 https://blog.csdn.net/yxzone/article/details/123817835
+
+## 命令行输出所有目录
+
+dir /B
+
+## cmd获得目录下所有文件
+
+dir /b /s /a-d

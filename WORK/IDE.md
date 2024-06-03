@@ -121,3 +121,15 @@ https://zhuanlan.zhihu.com/p/660879053
 ## vscode正则替换
 
 编辑框复制，左侧search开启正则
+
+## vscode正则搜索
+
+(.*)表示任意
+
+## 保存代码自动变成utf-8了
+
+vscode要设置autoGuessEncoding
+
+## 文件改名
+
+注意把match whole word开开
