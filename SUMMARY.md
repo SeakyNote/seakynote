@@ -36,7 +36,7 @@
   * [友谊与备胎](PsychologyOfLove/友谊与备胎.md)
   * [婚姻和爱情能平衡么](PsychologyOfLove/婚姻和爱情能平衡么.md)
   * [失恋是一种病](PsychologyOfLove/失恋是一种病.md)
-* 工作经验
+* 工作与学习经验
   * [C++理论](WORK/cppConcepts.md)
   * [C++用法](WORK/cppUsages.md)
   * [三维软件](WORK/3DSoftware.md)
