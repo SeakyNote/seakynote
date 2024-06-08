@@ -48,10 +48,6 @@ C++编译生成的动态库和静态库都可以使用`.lib`作为文件扩展�
 
 https://stackoverflow.com/questions/22797418/how-do-i-safely-pass-objects-especially-stl-objects-to-and-from-a-dll
 
-## cmake编译utf-8文件报常量中有换行符的问题
-
-add_compile_options("/utf-8")
-
 ## vs项目宏UNICODE和_UNICODE
 
 由于vs配置项使用了unicode字符集
@@ -59,8 +55,3 @@ add_compile_options("/utf-8")
 https://blog.csdn.net/huashuolin001/article/details/95620424
 
 https://blog.csdn.net/xiliang_pan/article/details/7081395
-
-## 无法解析的外部符号 static struct QMetaObject问题
-
-cmake未将头文件加入源码
-

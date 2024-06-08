@@ -139,3 +139,11 @@ https://www.cnblogs.com/dbai/p/17249494.html
 https://blog.csdn.net/qq_51470638/article/details/129101424
 
 ## 编译时注意项目内的build是否会有影响，尤其是对于批处理编译的情况
+
+## cmake编译utf-8文件报常量中有换行符的问题
+
+add_compile_options("/utf-8")
+
+## 无法解析的外部符号 static struct QMetaObject问题
+
+cmake未将头文件加入源码

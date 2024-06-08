@@ -58,7 +58,6 @@
   * [图片](WORK/picture.md)
   * [python](WORK/python.md)
   * [Qt](WORK/Qt.md)
-  * [招聘](WORK/recruit.md)
   * [工具](WORK/tools.md)
   * [虚拟机](WORK/vm.md)
   * [windows](WORK/windows.md)

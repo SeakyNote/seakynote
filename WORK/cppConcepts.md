@@ -10,10 +10,6 @@ Others distinguish between named and unnamed objects, using the term variable to
 
 object: A region of memory that has a type. A variable is an object that has a name. 
 
-## c++创建对象的三种方式 
-
-https://www.bilibili.com/read/cv10416320/
-
 ## 函数传参：指针vs引用
 
 https://stackoverflow.com/questions/114180/pointer-vs-reference
@@ -59,10 +55,6 @@ enum class Color {
 
 总结来说，使用 `enum class` 更加安全，因为它提供了更严格的作用域规则和类型安全性，而传统的 `enum` 则在使用时需要更加小心以避免命名冲突和意外的隐式转换。
 
-## 基类构造函数调用虚函数问题
-
-https://blog.csdn.net/tax10240809163com/article/details/122691584
-
 ## C++中为什么写派生类头文件时对基类不能前置声明而必须包含头文件？
 
 在C++中，派生类的头文件需要包含基类的头文件，而不能只使用前置声明来引用基类。这是因为派生类需要知道基类的具体定义，以便正确地继承基类的成员变量和成员函数。
@@ -73,58 +65,9 @@ https://blog.csdn.net/tax10240809163com/article/details/122691584
 
 因此，为了确保派生类能够正确地继承基类的成员和行为，必须在派生类的头文件中包含基类的头文件。
 
-## 简要谈谈C++继承中派生类的 构造 拷贝 赋值 析构的调用问题
-
-https://blog.csdn.net/m0_46606290/article/details/123994641
-
-## C++避坑：基类函数有无virtual关键字，差别巨大
-
-https://blog.csdn.net/qq_23418043/article/details/126316239
-
-## protected（保护）访问权限
-
-https://blog.csdn.net/weixin_46060711/article/details/123932852
-
-## C++多态
-
-https://www.runoob.com/cplusplus/cpp-polymorphism.html
-
-https://blog.csdn.net/zhang_si_hang/article/details/126173598
-
-## c++中重载，重写，覆盖
-
-https://www.cnblogs.com/tianzeng/p/9775672.html
-
-https://blog.csdn.net/JachinYang/article/details/117442902
-
-### Overload（重载）
-
-函数重载（Function Overloading）是指在一个类中定义多个同名函数，但它们的参数列表不同。编译器根据函数的参数列表来唯一标识每个函数，并根据调用时的实参来选择调用哪个函数。函数重载通常用于解决类似但参数不同的问题，提高代码的复用性。
-
-可以定义两个同名的add函数，一个是两个整数相加，另一个是两个浮点数相加
-
-### Override（覆盖）
-
-函数覆盖（Function Overriding）是指在派生类中定义与基类中同名同参数的虚函数，以覆盖（替代）基类的虚函数。派生类的虚函数调用时会优先调用自己重写的虚函数，而基类的虚函数会被忽略。
-
-函数覆盖通常用于实现多态性（Polymorphism），让不同的派生类对象调用同一个虚函数，却产生不同的行为。需要注意的是，只有虚函数才能被覆盖，而且派生类重写基类虚函数的参数列表和返回类型必须相同。
-
-例如，可以定义一个Shape基类，包含纯虚函数calcArea，来计算形状的面积；然后在Circle和Rectangle派生类中分别实现自己的calcArea函数，覆盖Shape基类的虚函数
-
-------
-
-同一个类的同名函数不同参数列表：重载
-基类和派生类中的函数，基类函数是虚函数，派生类函数与基类函数名称与参数列表完全相同：覆盖
-派生类函数与基类函数名称与参数列表完全相同，但是基类函数不是虚函数：隐藏
-派生类函数与基类函数名称相同但是参数列表不同，无论基类函数是不是virtual：隐藏。
-
 ## c++ 中*&的应用
 
 https://blog.csdn.net/weixin_45650172/article/details/105080470
-
-## const_cast
-
-https://www.cnblogs.com/xiangtingshen/p/10851245.html
 
 ## c++中dynamic_cast和static_cast在转换指针后是否应判断下是否为空再使用？
 
@@ -156,39 +99,6 @@ https://www.cnblogs.com/xiangtingshen/p/10851245.html
    ```
 
 总之，在使用`dynamic_cast`进行指针转换后，需要检查返回的指针是否为空，以确保转换的安全性。而在使用`static_cast`进行指针转换后，不需要检查返回的指针是否为空，但需要确保转换的安全性。
-
-## 派生类转化为基类可以直接转吗？还是要通过static_cast?
-
-在C++中，派生类转化为基类可以直接进行，因为派生类对象中包含了基类对象的部分。这种转换被称为向上转换（upcasting），它是隐式的，不需要使用任何显式的类型转换操作符。因此，你可以直接将派生类的对象指针或引用赋值给基类的指针或引用。
-
-举个例子：
-
-```cpp
-class Base {
-    // ...
-};
-
-class Derived : public Base {
-    // ...
-};
-
-int main() {
-    Derived derivedObj;
-    Base& baseRef = derivedObj; // 向上转换，无需显式转换
-    Base* basePtr = &derivedObj; // 向上转换，无需显式转换
-    return 0;
-}
-```
-
-然而，如果你想在编码时显式地表明你正在进行向上转换，你可以使用`static_cast`，但这不是必需的。
-
-```cpp
-Derived derivedObj;
-Base& baseRef = static_cast<Base&>(derivedObj); // 显式使用 static_cast 进行向上转换
-Base* basePtr = static_cast<Base*>(&derivedObj); // 显式使用 static_cast 进行向上转换
-```
-
-需要注意的是，向上转换是安全的，因为派生类对象包含了基类对象的部分。但是，向下转换（从基类指针或引用到派生类指针或引用）是不安全的，因为基类对象可能不包含派生类对象的所有部分。在这种情况下，你应该使用`dynamic_cast`，它会在运行时检查转换的合法性。
 
 ## c++中将空指针dynamic_cast会有问题吗？
 
@@ -277,10 +187,6 @@ https://stackoverflow.com/questions/184537/in-what-cases-do-i-use-malloc-and-or-
 ## 异常还是错误码
 
 https://stackoverflow.com/questions/253314/conventions-for-exceptions-or-error-codes
-
-## c++栈区、堆区
-
-https://blog.csdn.net/jinking01/article/details/88675935
 
 ## 短路规则
 

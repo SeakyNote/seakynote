@@ -86,18 +86,6 @@ c.erase( std::remove(c.begin(), c.end(), value), c.end() );
 
 总的来说，`vector<int>().swap(c)`的作用是清空vector对象并释放其内存，这在需要释放大量内存时是一个高效的方法。
 
-## `vector<int>( c ).swap( c );`
-
-这段代码的作用是将一个名为 c 的 vector 对象清空。通常情况下，我们可以使用 clear() 方法来清空 vector 对象，但是有时候使用 swap() 方法可以更高效地完成这个任务。
-
-让我们来解释一下这段代码的具体作用：
-
-1. `vector<int>(c)`：创建了一个临时的 vector 对象，其内容是 c 的副本。这个副本会继承 c 的容量和分配器，但是不会继承 c 的元素。
-
-2. `.swap(c)`：通过调用 swap() 方法，临时创建的 vector 对象与原始的 c 对象进行了交换。由于交换后临时创建的对象会被销毁，而原始的 c 对象现在包含了一个空的 vector，因此原始的 c 对象就被清空了。
-
-总的来说，这段代码的作用就是清空 vector 对象 c，但是相比于直接调用 clear() 方法，它使用了 swap() 来更高效地完成清空操作。
-
 ## c++类的成员函数中声明`operator char*() const;`是什么意思？
 
 在C++中，`operator char*() const;` 是一个类成员函数的声明，它声明了一个类型转换运算符（Type Conversion Operator）。这个运算符允许将一个类的对象转换为 `char*` 类型或者指向 `char` 类型的指针。
