@@ -13,3 +13,7 @@ https://bbs.luobotou.org/thread-49475-1-1.html
 ## 根据已有vmdk创建虚拟机
 
 https://blog.csdn.net/qq_34189344/article/details/127441986
+
+## virtualbox虚拟机报该内存不能为written的问题
+
+将"启用3D加速"关掉

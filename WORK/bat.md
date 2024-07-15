@@ -66,3 +66,26 @@ dir /B
 ## cmd获得目录下所有文件
 
 dir /b /s /a-d
+
+## bat递归删除目录下的build文件夹
+
+如果你希望删除特定目录下，包括子目录中所有名称为 "build" 的文件夹，可以使用适当的批处理命令。以下是一个示例：
+
+for /d /r %%i in (build) do (
+    if exist "%%i" (
+        rd /s /q "%%i"
+    )
+)
+在这个修改后的脚本中：
+
+for /d /r %%i in (build) 将会递归遍历当前目录及其所有子目录中所有名称为 "build" 的文件夹。
+if exist "%%i" 确保只有存在的文件夹才会执行删除操作。
+rd /s /q "%%i" 删除当前循环到的文件夹 %%i 及其所有内容，包括子目录中的同名文件夹。
+这样修改后的脚本将删除指定目录及其所有子目录中所有名称为 "build" 的文件夹。请确保在运行这样的删除操作之前备份重要数据，以免数据丢失。
+
+## bat复制文件例子
+
+set fromDir = %ENV_VALUE\aaa\bbb
+set toDir = %~dp0\..\ccc
+xcopy "%fromDir%\*.dll" "%toDir%" /S /Y
+xcopy "%fromDir%\eee.exe" "%toDir%" /Y

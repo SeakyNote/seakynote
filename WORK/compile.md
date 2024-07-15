@@ -55,3 +55,15 @@ https://stackoverflow.com/questions/22797418/how-do-i-safely-pass-objects-especi
 https://blog.csdn.net/huashuolin001/article/details/95620424
 
 https://blog.csdn.net/xiliang_pan/article/details/7081395
+
+## C4251编译警告问题
+
+https://learn.microsoft.com/zh-cn/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4251?view=msvc-170
+
+## vs编译警告及错误
+
+https://learn.microsoft.com/zh-cn/cpp/error-messages/compiler-errors-1/c-cpp-build-errors?view=msvc-170
+
+## windows mingw安装
+
+https://blog.csdn.net/orangebench11/article/details/126111356

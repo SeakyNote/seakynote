@@ -133,3 +133,11 @@ vscode要设置autoGuessEncoding
 ## 文件改名
 
 注意把match whole word开开
+
+## vscode左侧栏的explorer消失恢复
+
+https://blog.csdn.net/qq_21237549/article/details/137559757
+
+## vscode中cmake底部栏问题
+
+找status bar visibility

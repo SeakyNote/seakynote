@@ -258,3 +258,9 @@ https://www.zhihu.com/question/438004429
 ## include guard vs pragma once
 
 https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rs-guards
+
+## 最好为所有依赖项显式包含标头，以便代码不会因头文件更改而出错
+
+https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf10-avoid-dependencies-on-implicitly-included-names
+
+https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/headers.html#include-what-you-use

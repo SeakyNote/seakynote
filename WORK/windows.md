@@ -27,3 +27,7 @@ https://baijiahao.baidu.com/s?id=1747900190343476878&wfr=spider&for=pc
 ## windows中静态库lib和动态dll的区别及使用方法
 
 https://zhuanlan.zhihu.com/p/89106047
+
+## win/linux都是f2重命名
+
+## cmd中tab键可补全字符串

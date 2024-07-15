@@ -53,3 +53,13 @@ https://www.cnblogs.com/perhaps/archive/2005/07/06/187464.html
 ## BS C++ style
 
 https://www.stroustrup.com/bs_faq2.html
+
+## 匈牙利记法
+
+NL.5: Avoid encoding type information in names
+
+https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rl-knr
+
+## c++101编程规范
+
+https://killwing.github.io/c++-coding-standards.md.html
