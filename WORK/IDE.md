@@ -141,3 +141,9 @@ https://blog.csdn.net/qq_21237549/article/details/137559757
 ## vscode中cmake底部栏问题
 
 找status bar visibility
+
+## vscode clang-format格式化头文件顺序不对
+- vscode设置中editor: Default Formatter设置不正确
+- 或者尝试代码文件tab内右键Format Document With...
+	- Configure Default Formatter...
+- 与C_Cpp: Formatting无关

@@ -264,3 +264,19 @@ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rs-guards
 https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf10-avoid-dependencies-on-implicitly-included-names
 
 https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/headers.html#include-what-you-use
+
+## 如何理解queue不能基于vector构造？
+```
+    vector<int> vec{1,2,3};
+    queue<int, vector<int>> q3{vec};
+    q3.pop();//加上这行编译就出问题了
+    cout << q3.front() << " " << q3.back()<<endl;
+```
+实测gcc编译器可以基于vector构造queue，但调用pop函数时会报编译错误
+
+## 智能指针作用域
+与局部变量一致，离开作用域，指向的内存释放
+
+## string::compare
+- 类似C中的strcmp
+- C++ primer 5e 9.5.4

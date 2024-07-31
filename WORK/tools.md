@@ -23,3 +23,16 @@ https://blog.csdn.net/xqj198404/article/details/24397129
 dumpbin(vs自带)
 
 `dumpbin /dependents YourLibrary.dll`
+
+## 下载chrome
+https://chromeenterprise.google/download/
+
+## doxygen
+https://www.eet-china.com/mp/a127830.html
+
+## ppt中表格行高
+
+布局-高度
+
+## excel表格自动换行
+开始-自动换行

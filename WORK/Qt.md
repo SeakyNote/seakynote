@@ -500,3 +500,6 @@ connect(defaultButton, &QPushButton::clicked, [=](){
 在这个示例中，defaultButton被设置为默认按钮，这意味着当用户在对话框中按下"Enter"键时，与defaultButton相关联的操作将被执行。
 
 通过使用default属性，您可以改善用户界面的交互性，使用户能够更轻松地执行对话框中的默认操作。
+
+## Qt信号槽失效的原因
+很有可能sender已经被干掉了

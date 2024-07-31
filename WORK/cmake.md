@@ -230,3 +230,8 @@ https://blog.csdn.net/Tosonw/article/details/89449029
 https://gitee.com/bigearrabbit/kevin_ctest
 
 https://www.jetbrains.com/lp/devecosystem-2022/cpp/#Which-unit-testing-frameworks-do-you-regularly-use
+
+## cmake install
+https://gitee.com/bigearrabbit/KevinCmake/tree/master/cmake_install
+
+https://www.bilibili.com/video/BV1Ep421Q7Rt

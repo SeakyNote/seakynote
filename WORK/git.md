@@ -116,3 +116,7 @@ $:git pull
 ```
 
 ## 代码审查考虑用sourcetree
+
+## git仓库文件大小写改名问题
+- windows平台下仅变更大小写不会触发git uncommit
+- 如果要仅变更大小写需要先删除后重新添加
