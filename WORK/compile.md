@@ -67,3 +67,15 @@ https://learn.microsoft.com/zh-cn/cpp/error-messages/compiler-errors-1/c-cpp-bui
 ## windows mingw安装
 
 https://blog.csdn.net/orangebench11/article/details/126111356
+
+
+## C4819问题
+编译选项加"/utf-8"
+
+## debug版和release版行为不同
+可能是发生未定义行为的情况
+- 如C4172
+
+## C4996转化为错误
+https://stackoverflow.com/questions/20448102/why-does-visual-studio-2013-issue-a-c4996-error
+与sdl检查开关有关

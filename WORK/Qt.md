@@ -503,3 +503,89 @@ connect(defaultButton, &QPushButton::clicked, [=](){
 
 ## Qt信号槽失效的原因
 很有可能sender已经被干掉了
+
+## Qt中QStackedWidget是什么？
+`QStackedWidget` 是 Qt 框架中的一个用于管理多个子窗口部件（widgets）的容器部件。它可以堆叠多个子窗口部件，并且在任意时间点只显示其中的一个。
+
+### 主要特点：
+- **堆叠多个窗口部件**：`QStackedWidget` 可以包含多个子部件（如 `QWidget`），并且这些子部件彼此堆叠。每次只能看到一个子部件，其他的则被隐藏。
+- **动态切换**：可以使用 `setCurrentIndex(int index)` 或 `setCurrentWidget(QWidget *widget)` 方法来切换当前显示的子部件。
+- **索引管理**：子部件按照添加的顺序排列，每个子部件都有一个从 0 开始的索引。可以使用 `currentIndex()` 获取当前显示部件的索引，也可以使用 `widget(int index)` 获取特定索引的部件。
+
+### 常见使用场景：
+- **多页面界面**：`QStackedWidget` 常用于实现多页面的界面设计，用户通过按钮、标签或其他控制部件在不同页面间切换。
+- **向导模式**：在向导模式中，每一步可能都是不同的界面，`QStackedWidget` 可以用于在这些界面之间切换。
+
+### 简单示例代码：
+```cpp
+#include <QApplication>
+#include <QStackedWidget>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QWidget>
+
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    QWidget *window = new QWidget;
+
+    // 创建一个 QStackedWidget
+    QStackedWidget *stackedWidget = new QStackedWidget;
+
+    // 创建多个子窗口部件
+    QWidget *page1 = new QWidget;
+    page1->setStyleSheet("background-color: red;");
+    
+    QWidget *page2 = new QWidget;
+    page2->setStyleSheet("background-color: green;");
+    
+    QWidget *page3 = new QWidget;
+    page3->setStyleSheet("background-color: blue;");
+
+    // 将子部件添加到 QStackedWidget 中
+    stackedWidget->addWidget(page1);
+    stackedWidget->addWidget(page2);
+    stackedWidget->addWidget(page3);
+
+    // 创建按钮来切换页面
+    QPushButton *button1 = new QPushButton("Show Page 1");
+    QPushButton *button2 = new QPushButton("Show Page 2");
+    QPushButton *button3 = new QPushButton("Show Page 3");
+
+    QObject::connect(button1, &QPushButton::clicked, [=](){
+        stackedWidget->setCurrentIndex(0);
+    });
+
+    QObject::connect(button2, &QPushButton::clicked, [=](){
+        stackedWidget->setCurrentIndex(1);
+    });
+
+    QObject::connect(button3, &QPushButton::clicked, [=](){
+        stackedWidget->setCurrentIndex(2);
+    });
+
+    // 布局管理
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(stackedWidget);
+    layout->addWidget(button1);
+    layout->addWidget(button2);
+    layout->addWidget(button3);
+
+    window->setLayout(layout);
+    window->show();
+
+    return app.exec();
+}
+```
+
+这个示例展示了如何使用 `QStackedWidget` 来切换显示不同的页面。通过点击不同的按钮，可以在不同的页面间进行切换。
+
+### 其他相关方法：
+- `addWidget(QWidget *widget)`：向堆栈中添加子部件。
+- `removeWidget(QWidget *widget)`：从堆栈中移除子部件。
+- `count()`：返回堆栈中子部件的数量。
+- `currentWidget()`：获取当前显示的子部件。
+
+## qt商业版无许可移除敏感文件单独打包，配合vs2022编译
+- qmake编译报license问题，cmake编译运行正常
+- cmake是开源的，qmake是商业公司的

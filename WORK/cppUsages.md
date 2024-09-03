@@ -14,9 +14,9 @@ https://stackoverflow.com/questions/3060006/is-it-worth-setting-pointers-to-null
 
 C++ Primer关于此问题：在指针即将要离开其作用域之前释放掉它所关联的内存;如果我们需要保留指针，可以在delete后将nullptr赋予指针。
 
-## C++宏 #的使用
+## C++宏 `#`的使用
 
-#构串操作符: 将#右边内容转化为字符串
+`#`构串操作符: 将#右边内容转化为字符串
 
 ##合并操作符: ##左右直接拼接
 
@@ -30,7 +30,7 @@ std::string().at(1);
 
 ## c++万能头文件
 
-#include<bits/stdc++.h>
+`#include<bits/stdc++.h>`
 
 ## 初始化列表顺序问题
 
@@ -142,7 +142,7 @@ max_element
 
 ## 最小堆
 
-priority_queue<int, vector<int>, greater<int>>
+`priority_queue<int, vector<int>, greater<int>>`
 
 push
 
@@ -280,3 +280,454 @@ https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/head
 ## string::compare
 - 类似C中的strcmp
 - C++ primer 5e 9.5.4
+
+## 模板类中的`operator->`
+在C++模板类中，`T* operator->()` 是一个重载运算符，用于返回指向模板类型对象的指针。这个运算符通常在需要通过模板类的实例访问其内部对象的成员时使用。
+### 详细解释
+
+1. **定义和用途**：
+    - `operator->` 运算符用于对象的指针成员访问。这意味着可以使用类似指针的语法来访问对象的成员。
+    - 在模板类中，`T* operator->()` 重载通常用于包装类，这些类封装了一个指向对象的指针，以便于管理对象的生命周期或增加额外的功能。
+
+2. **示例代码**：
+    下面是一个简单的示例，展示了如何在模板类中定义和使用 `operator->`：
+
+    ```cpp
+    #include <iostream>
+    #include <memory>
+
+    // 一个简单的模板类，封装了指针
+    template <typename T>
+    class SmartPointer {
+    private:
+        T* ptr; // 原始指针
+
+    public:
+        // 构造函数
+        explicit SmartPointer(T* p = nullptr) : ptr(p) {}
+
+        // 析构函数
+        ~SmartPointer() {
+            delete ptr;
+        }
+
+        // 重载 -> 运算符
+        T* operator->() {
+            return ptr;
+        }
+
+        // 重载 * 运算符
+        T& operator*() {
+            return *ptr;
+        }
+    };
+
+    // 一个简单的类，用于测试
+    class Test {
+    public:
+        void show() {
+            std::cout << "Test::show() called" << std::endl;
+        }
+    };
+
+    int main() {
+        SmartPointer<Test> sp(new Test());
+        sp->show(); // 使用重载的 -> 运算符来调用 Test::show()
+        return 0;
+    }
+    ```
+
+3. **工作原理**：
+    - 在上述示例中，`SmartPointer` 类封装了一个指向类型 `T` 的指针 `ptr`。
+    - 当使用 `sp->show()` 时，`operator->` 被调用，返回 `ptr`，然后通过 `ptr` 调用 `show()` 方法。
+    - 这种机制使得 `SmartPointer` 对象看起来像是指针，可以像使用普通指针那样使用它。
+
+4. **实际应用**：
+    - `operator->` 重载在智能指针（如 `std::shared_ptr` 和 `std::unique_ptr`）中广泛使用，使得智能指针可以像原始指针一样进行成员访问。
+    - 它还可以用于其他封装类，提供一种安全、便捷的访问内部指针的方法。
+
+通过重载 `operator->`，模板类可以增强指针的功能，提供更高层次的抽象，同时保持指针使用的简便性和直观性。
+
+## LoadLibrary执行失败原因
+加载动态库依赖的动态库或后续依赖的动态库不存在
+
+## stdafx.h的特殊性
+必须第一个#include
+
+## string::data和string::c_str区别
+在C++中，`std::string::data()` 和 `std::string::c_str()` 是两个用于获取字符串内部字符数组指针的成员函数。虽然它们看起来类似，但在细节上有一些区别。
+
+### `std::string::data()`
+- 返回指向字符串内容的指针。
+- 在C++11之前，`data()`返回的指针不是以null终止符（`\0`）结尾的，从C++11开始，`data()`函数和`c_str()`函数的行为一致，返回的字符数组是以`\0`结尾的。
+- 从C++17开始，返回的指针类型为 `char*`，可以修改字符串的内容（当然前提是你不是用`const`修饰的字符串对象来调用这个方法）。
+
+### `std::string::c_str()`
+- 返回指向以null终止符（`\0`）结尾的字符数组的指针。
+- 保证返回的字符数组始终以`\0`结尾，这在需要与C风格字符串兼容时非常重要。
+- 返回类型是 `const char*`，因此不能通过它来修改字符串的内容。
+
+### 总结区别
+1. **用途不同**：`c_str()`主要用于需要与C API交互的场景，保证返回的字符串是以`\0`终止的。而`data()`更通用，可以用于各种需要字符数组指针的场合。
+2. **返回类型不同**：`c_str()`返回`const char*`，不能用于修改字符串内容；而在C++17及之后的版本中，`data()`返回`char*`（对于非`const`的`std::string`对象），允许修改字符串内容。
+3. **是否以`\0`结尾**：`c_str()`保证以`\0`结尾；`data()`从C++11开始也是如此，但在此之前的版本中，`data()`返回的字符数组未必以`\0`结尾。
+
+所以，在现代C++（C++11及之后）的编程中，`data()`和`c_str()`的行为几乎是一致的，只是`data()`允许更灵活的操作。
+
+## C++获取已销毁布尔对象的引用会怎么样？
+在C++中，获取已销毁布尔对象（或任何对象）的引用会导致**未定义行为（undefined behavior, UB）**。未定义行为意味着程序的行为是不可预测的，可能会表现为以下几种情况：
+
+1. **程序崩溃**：程序可能会因为访问已销毁对象的内存位置而崩溃，这通常会导致段错误（segmentation fault）。
+
+2. **不正确的值**：引用的对象可能会返回垃圾值，因为该内存位置可能已经被其他数据覆盖或重新分配。
+
+3. **数据损坏**：访问已销毁对象可能会导致意外的内存修改，从而损坏数据或引发其他不可预见的问题。
+
+4. **未观察到的行为**：在某些情况下，程序可能会继续运行，但以错误的方式运行。这些错误可能很难调试，因为它们可能不会立即显现。
+
+具体来说，如果你有一个布尔对象`bool myBool`，然后你通过某种方式获取了这个对象的引用`bool& ref = myBool;`，接着销毁了这个对象（例如对象超出了作用域），如果你再使用这个引用`ref`，就会触发未定义行为。
+
+例如：
+
+```cpp
+bool* createBool() {
+    bool localBool = true;
+    return &localBool;  // 返回局部变量的指针
+}
+
+int main() {
+    bool* ptr = createBool();  // 获取已经销毁的布尔对象的指针
+    bool ref = *ptr;  // 解引用这个指针
+    std::cout << ref << std::endl;  // 打印的值是未定义的
+    return 0;
+}
+```
+
+在这个例子中，`localBool`在`createBool()`函数返回时已经被销毁。随后在`main()`函数中解引用这个已经销毁的对象将导致未定义行为。
+
+为了避免这种问题，应该确保在访问对象时，它们仍然是有效的，特别是在使用指针和引用时，要格外小心。
+
+## bool初始化问题
+在 C++ 中，`bool` 类型的变量是否会被初始化取决于变量的声明位置和是否显式初始化。
+
+1. **局部变量（在函数内部声明的变量）：**
+   - 如果你在函数内部声明了一个 `bool` 变量，但没有对它进行显式初始化，那么它的值是未定义的。这意味着它可能持有任何值，无法预测。
+   - 示例：
+     ```cpp
+     void foo() {
+         bool myBool;  // 未定义行为，myBool 未初始化
+         if (myBool) {
+             // 这可能会做任何事情，因为 myBool 的值是未定义的
+         }
+     }
+     ```
+
+2. **全局变量或静态变量：**
+   - 如果 `bool` 变量是在全局作用域（函数外部）或是 `static` 关键字修饰的，那么它将被自动初始化为 `false`。
+   - 示例：
+     ```cpp
+     bool myBoolGlobal;  // 自动初始化为 false
+
+     void foo() {
+         static bool myBoolStatic;  // 自动初始化为 false
+     }
+     ```
+
+总结来说：
+- **局部变量**（函数内部声明的）：不会自动初始化，需要你显式地赋值。
+- **全局变量**和**静态变量**：会自动初始化为 `false`。
+
+## c++自定义构造必须声明默认构造函数吗？
+
+在C++中，如果你定义了一个自定义构造函数，**编译器不会自动生成默认构造函数**。这意味着如果你的类需要一个默认构造函数（即无参数构造函数），你必须显式地声明它。
+
+### 示例解释
+```cpp
+class MyClass {
+public:
+    MyClass(int x) { /*...*/ }  // 自定义构造函数
+    // MyClass() {}             // 默认构造函数（需要显式声明）
+};
+```
+
+在上面的代码中，`MyClass`有一个带参数的构造函数。如果你不显式声明一个默认构造函数`MyClass()`，那么你将不能创建没有参数的`MyClass`对象：
+
+```cpp
+MyClass obj; // 错误：没有默认构造函数
+```
+
+### 何时需要声明默认构造函数
+你需要显式声明默认构造函数的情形包括：
+
+1. **需要创建默认构造对象**：例如，容器类如`std::vector`在扩展容量时可能需要使用默认构造函数来初始化新分配的元素。
+2. **多重继承**：在多重继承的情况下，基类的默认构造函数可能被隐式调用，除非你提供其他的构造函数。
+3. **默认参数设置**：当你需要为某些成员变量设置默认值。
+
+### 解决方法
+你可以通过显式定义默认构造函数来解决这个问题：
+
+```cpp
+class MyClass {
+public:
+    MyClass() {}          // 显式声明默认构造函数
+    MyClass(int x) { /*...*/ }
+};
+```
+
+或使用默认的构造函数：
+
+```cpp
+class MyClass {
+public:
+    MyClass() = default;  // 使用编译器生成的默认构造函数
+    MyClass(int x) { /*...*/ }
+};
+```
+
+这样，`MyClass obj;`就可以正常工作了。
+
+## C++默认构造函数可以不声明吗？
+是的，C++的默认构造函数可以不声明。如果类中没有用户显式声明任何构造函数，编译器会自动为类生成一个默认构造函数。这个默认构造函数是无参的，执行对象成员的默认初始化。
+
+不过，如果你在类中声明了其他的构造函数（比如带参数的构造函数），但没有声明默认构造函数，那么编译器就不会再自动生成默认构造函数。如果在这种情况下你还想要一个默认构造函数，那么就需要显式地声明它。
+
+举个例子：
+
+```cpp
+class MyClass {
+public:
+    MyClass(int value) { /* 带参数的构造函数 */ }
+    // 此时编译器不会为MyClass生成默认构造函数
+};
+
+// 如果你希望这个类有一个默认构造函数，你需要显式声明它
+class MyClass {
+public:
+    MyClass() = default; // 声明默认构造函数
+    MyClass(int value) { /* 带参数的构造函数 */ }
+};
+```
+
+总结一下：
+- 如果类中没有声明任何构造函数，编译器会自动生成一个默认构造函数。
+- 如果类中已经声明了其他构造函数，但没有声明默认构造函数，编译器不会再生成默认构造函数，此时需要手动声明默认构造函数。
+
+## C++写enum class中枚举值如何不写enum class类型？（C++20）
+```
+enum class Color {
+    Red,
+    Green,
+    Blue
+};
+
+using enum Color;
+
+int main() {
+    Color color = Red;  // 直接使用枚举值
+    return 0;
+}
+```
+
+## avoid endl
+`[CG] SL.io.50`
+
+## 头文件全局作用域不允许使用using namespace
+`[CG] SF.7`
+
+## C++17花括号初始化逻辑变更?
+`[CG] ES.23`
+
+## 返回值优化 (RVO) 详解
+### 返回值优化 (RVO) 详解
+
+**返回值优化 (Return Value Optimization, RVO)** 是C++编译器的一种优化技术，旨在减少对象的拷贝和构造开销。在传统的函数返回值处理中，函数返回的对象可能需要先在函数内部构造一个临时对象，然后再将这个临时对象拷贝或移动到调用者的上下文中。这种过程可能会引入不必要的开销。RVO旨在消除这些不必要的拷贝构造和析构调用，从而提高程序的效率。
+
+### RVO 的工作原理
+
+当一个函数返回一个对象时，RVO允许编译器直接在调用者的栈空间上构造返回的对象，而不是在函数内部构造一个临时对象并将其拷贝或移动到调用者的栈上。
+
+例如，考虑以下代码：
+
+```cpp
+#include <string>
+
+std::string createString() {
+    std::string temp = "Hello, RVO!";
+    return temp;
+}
+
+int main() {
+    std::string str = createString();
+    return 0;
+}
+```
+
+在传统的处理方式中，`createString`函数会在其内部创建一个临时`std::string`对象，然后返回这个对象。在返回时，可能需要调用`std::string`的拷贝构造函数将临时对象拷贝到调用者的`str`变量中。之后，临时对象被销毁，调用析构函数。
+
+然而，有了RVO，编译器会直接在`str`所在的内存位置上构造返回的字符串对象，而不会创建和拷贝临时对象。这意味着以下步骤：
+
+1. **在调用者的内存位置上**直接构造`temp`对象。
+2. 省略了返回时的拷贝或移动操作。
+
+### 编译器支持和强制RVO
+
+大多数现代C++编译器都支持RVO，并且会在符合条件时自动应用这种优化。这些优化通常是隐式的，程序员不需要显式地请求RVO。
+
+C++17引入了**强制RVO (Mandatory RVO)**，这意味着在某些情况下，编译器必须应用RVO。例如，当函数返回一个局部变量时，编译器不再需要检查是否可以进行RVO，而是必须执行。这减少了开发人员的负担，因为他们不必再考虑临时对象的拷贝开销。
+
+### 移动语义与RVO的关系
+
+在C++11引入移动语义后，编译器可以通过移动构造函数进一步优化返回值处理。如果RVO未能应用，编译器可以尝试使用移动构造函数代替拷贝构造函数，从而减少开销。
+
+不过，如果RVO生效，那么移动语义并不会被触发，因为没有临时对象需要移动。RVO直接消除了临时对象的生成，从而使得移动语义也变得不必要。
+
+### 总结
+
+RVO是一种强大的编译器优化技术，极大地提升了函数返回值处理的效率。通过消除不必要的拷贝和移动，RVO减少了性能开销，并在现代C++中得到了广泛的支持和应用。C++17引入的强制RVO进一步提升了代码效率，使得开发者可以更加专注于代码逻辑，而不必担心返回值的性能问题。
+
+## 测量push_back及emplace_back效率差别
+```cpp
+#include <iostream>
+#include <vector>
+#include <chrono>
+
+class MyClass {
+public:
+    int x, y;
+    MyClass(int a, int b) : x(a), y(b) {}
+};
+
+int main() {
+    const int num_elements = 100'000'000;
+
+    // 测试 push_back 的效率
+    std::vector<MyClass> vec_push_back;
+    auto start_push_back = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < num_elements; ++i) {
+        MyClass obj(i, i+1);
+        vec_push_back.push_back(obj);
+    }
+    auto end_push_back = std::chrono::high_resolution_clock::now();
+    auto duration_push_back = std::chrono::duration_cast<std::chrono::microseconds>(end_push_back - start_push_back).count();
+
+    // 测试 emplace_back 的效率
+    std::vector<MyClass> vec_emplace_back;
+    auto start_emplace_back = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < num_elements; ++i) {
+        vec_emplace_back.emplace_back(i, i+1);
+    }
+    auto end_emplace_back = std::chrono::high_resolution_clock::now();
+    auto duration_emplace_back = std::chrono::duration_cast<std::chrono::microseconds>(end_emplace_back - start_emplace_back).count();
+
+    std::cout << "push_back duration: " << duration_push_back << " microseconds" << std::endl;
+    std::cout << "emplace_back duration: " << duration_emplace_back << " microseconds" << std::endl;
+
+    return 0;
+}
+```
+emplace_back慢一些
+
+相反例子:
+```cpp
+#include <iostream>
+#include <vector>
+#include <chrono>
+
+// 定义一个更复杂的类，包含动态内存分配
+class MyClass {
+public:
+    int* data;
+    int size;
+    
+    // 构造函数
+    MyClass(int s) : size(s) {
+        data = new int[size];
+        for (int i = 0; i < size; ++i) {
+            data[i] = i;
+        }
+    }
+
+    // 复制构造函数
+    MyClass(const MyClass& other) : size(other.size) {
+        data = new int[size];
+        std::copy(other.data, other.data + size, data);
+    }
+
+    // 移动构造函数
+    MyClass(MyClass&& other) noexcept : data(other.data), size(other.size) {
+        other.data = nullptr;
+        other.size = 0;
+    }
+
+    // 析构函数
+    ~MyClass() {
+        delete[] data;
+    }
+};
+
+int main() {
+    const int num_elements = 10'000;
+    const int num_iterations = 10;
+
+    long long total_duration_push_back = 0;
+    long long total_duration_emplace_back = 0;
+
+    for (int j = 0; j < num_iterations; ++j) {
+        std::vector<MyClass> vec_push_back;
+        vec_push_back.reserve(num_elements);  // 预先分配内存
+        
+        auto start_push_back = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < num_elements; ++i) {
+            MyClass obj(1000);  // 使用更复杂的对象
+            vec_push_back.push_back(obj);
+        }
+        auto end_push_back = std::chrono::high_resolution_clock::now();
+        total_duration_push_back += std::chrono::duration_cast<std::chrono::microseconds>(end_push_back - start_push_back).count();
+
+        std::vector<MyClass> vec_emplace_back;
+        vec_emplace_back.reserve(num_elements);  // 预先分配内存
+
+        auto start_emplace_back = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < num_elements; ++i) {
+            vec_emplace_back.emplace_back(1000);  // 直接在容器中构造对象
+        }
+        auto end_emplace_back = std::chrono::high_resolution_clock::now();
+        total_duration_emplace_back += std::chrono::duration_cast<std::chrono::microseconds>(end_emplace_back - start_emplace_back).count();
+    }
+
+    std::cout << "Average push_back duration: " << total_duration_push_back / num_iterations << " microseconds" << std::endl;
+    std::cout << "Average emplace_back duration: " << total_duration_emplace_back / num_iterations << " microseconds" << std::endl;
+
+    return 0;
+}
+```
+
+## C++中`int a[]{1,2,3,4}`和`int a[4]{1,2,3,4}`有什么区别？
+在C++中，`int a[]{1,2,3,4}` 和 `int a[4]{1,2,3,4}` 都是用于定义和初始化数组的语法，但是它们之间有一些细微的差异。
+
+### 1. `int a[]{1,2,3,4};`
+- **数组大小自动推断**：这里使用的是一个没有指定大小的数组初始化器，编译器会根据初始化列表中的元素数量来自动推断数组的大小。
+- **数组大小**：在这个例子中，数组的大小将被推断为4，因为初始化列表中有4个元素。
+- **示例**：
+  ```cpp
+  int a[]{1, 2, 3, 4};
+  ```
+  这相当于定义了一个大小为4的数组`a`，内容为`{1, 2, 3, 4}`。
+
+### 2. `int a[4]{1,2,3,4};`
+- **显式指定数组大小**：这里数组的大小是显式指定的，即`4`。
+- **数组大小**：即使初始化列表的元素少于指定的大小，数组也会被初始化到指定的大小。多余的元素将被自动初始化为零。如果初始化列表中的元素多于指定的大小，则会导致编译错误。
+- **示例**：
+  ```cpp
+  int a[4]{1, 2, 3, 4};
+  ```
+  这也定义了一个大小为4的数组`a`，内容为`{1, 2, 3, 4}`。
+
+### 主要区别总结：
+- `int a[]{1,2,3,4};`：数组大小是由初始化列表中的元素个数自动推断的。
+- `int a[4]{1,2,3,4};`：数组大小是显式指定的，初始化列表中的元素不会影响数组的大小（除非元素多于数组大小，则会导致错误）。
+
+在这两个例子中，由于初始化列表中的元素个数恰好为4，因此两者的效果是一样的，都是创建一个包含4个元素的数组`a`。不过在某些情况下，这两个语法会表现出不同的行为，尤其是在数组大小与初始化列表中的元素数量不一致时。
+
+## 每个声明仅声明一个名称
+`[CG]ES.10`

@@ -147,3 +147,11 @@ https://blog.csdn.net/qq_21237549/article/details/137559757
 - 或者尝试代码文件tab内右键Format Document With...
 	- Configure Default Formatter...
 - 与C_Cpp: Formatting无关
+
+## vs2022添加类
+- 解决方案管理器
+- 选中节点
+- 右键添加-新建项
+
+## msvc C++版本显示错误
+编译增加 `/Zc:__cplusplus`

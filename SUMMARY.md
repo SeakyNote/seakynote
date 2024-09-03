@@ -39,7 +39,7 @@
 * 工作与学习经验
   * [C++理论](WORK/cppConcepts.md)
   * [C++用法](WORK/cppUsages.md)
-  * [C++"新"特性](WORK/cppNewFeature.md)
+  * [C++"新"特性](WORK/cppNewFeatures.md)
   * [C++/Qt常见警告](WORK/cppWarnings.md)
   * [三维软件](WORK/3DSoftware.md)
   * [算法](WORK/algorithm.md)
