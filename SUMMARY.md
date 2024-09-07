@@ -24,6 +24,16 @@
   * [干扰批判性思维的障碍](AskingRightQuestions/干扰批判性思维的障碍.md)
 * 《代码大全》
   * [32.自说明代码](CodeComplete/32.自说明代码.md)
+* 《Effectivs Modern C++》
+  * [简介](EffectiveModernCpp/0.Introduction.md)
+  * [类型推导](EffectiveModernCpp/1.DeducingTypes.md)
+  * [auto](EffectiveModernCpp/2.Auto.md)
+  * [移步现代C++](EffectiveModernCpp/3.MovingToModernCpp.md)
+  * [智能指针](EffectiveModernCpp/4.SmartPointers.md)
+  * [右值引用，移动语义，完美转发](EffectiveModernCpp/5.RRefMovSemPerfForw.md)
+  * [lambda表达式](EffectiveModernCpp/6.LambdaExpressions.md)
+  * [并发API](EffectiveModernCpp/7.TheConcurrencyAPI.md)
+  * [微调](EffectiveModernCpp/8.Tweaks.md)
 * 招聘
   * [招聘初步研究](recruit/招聘初步研究.md)
   * 面试
