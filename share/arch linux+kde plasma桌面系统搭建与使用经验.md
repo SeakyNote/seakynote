@@ -14,7 +14,7 @@
 - 社区发行版，不受到商业公司裹挟，隐私保护也更好
 - 遵循KISS原则，非OOTB，适合折腾和学习
 
-![](assets/distro.webp)
+![](assets/distro.png)
 关于arch linux中文介绍见此页面：
 
 https://wiki.archlinuxcn.org/wiki/Arch_Linux
