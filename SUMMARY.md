@@ -73,3 +73,5 @@
   * [工具](WORK/tools.md)
   * [虚拟机](WORK/vm.md)
   * [windows](WORK/windows.md)
+* 分享
+  * [arch linux+kde plasma桌面系统搭建与使用经验](share/arch%20linux+kde%20plasma桌面系统搭建与使用经验.md)
