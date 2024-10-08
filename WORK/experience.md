@@ -71,3 +71,11 @@ https://norvig.com/21-days.html
 ## 接口类及内部调用的函数一律要求提供测试用例
 - 光靠肉眼审查不一定能查出来
 - 测试用例全面些，尽可能涉及到较多的逻辑
+
+## 使英文字母小写变大写用英文怎么说？
+使英文字母小写变大写用英文表达为 **convert lowercase to uppercase** 或 **change lowercase to uppercase**。
+
+- **Convert lowercase to uppercase**: 强调将小写字母转换为大写字母的操作。
+- **Change lowercase to uppercase**: 更通俗的说法，指的是将小写字母改成大写字母。
+
+另外，编程中常使用 **capitalize**（将首字母大写）或者 **to uppercase**（将所有字母变为大写）。

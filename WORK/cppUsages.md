@@ -123,12 +123,12 @@ int main() {
 
 ## string转wstring
 
-```c++
+```cpp
 std::string narrowStr = "Hello, World!";
 std::wstring wideStr(narrowStr.begin(), narrowStr.end());
 ```
 
-```c++
+```cpp
 std::string narrowStr = "Hello, World!";
 std::wstring wideStr;
 std::copy(narrowStr.begin(), narrowStr.end(), std::back_inserter(wideStr));
@@ -152,7 +152,7 @@ pop弹出最小值
 
 ## `vector<int>`搜索某项
 
-```c++
+```cpp
 auto it = std::find(numbers.begin(), numbers.end(), searchItem);
 
 while (it != numbers.end()) {
@@ -161,7 +161,7 @@ while (it != numbers.end()) {
 }
 ```
 
-```c++
+```cpp
 while (it != numbers.end()) {
     // 计算迭代器的位置（索引）
     int index = std::distance(numbers.begin(), it);
@@ -731,3 +731,231 @@ int main() {
 
 ## 每个声明仅声明一个名称
 `[CG]ES.10`
+
+## 处理json中的字符串值
+```cpp
+#include <iostream>
+#include <rapidjson/document.h>
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#include <algorithm>
+
+// 将字符串转换为大写
+std::string to_upper(const std::string& str) {
+    std::string result = str;
+    std::transform(result.begin(), result.end(), result.begin(), ::toupper);
+    return result;
+}
+
+// 递归处理 JSON 对象
+void process_json(rapidjson::Value& value, rapidjson::Document::AllocatorType& allocator) {
+    if (value.IsObject()) {
+        // 如果是对象，递归处理每一个成员
+        for (auto& member : value.GetObject()) {
+            process_json(member.value, allocator);
+        }
+    } else if (value.IsArray()) {
+        // 如果是数组，递归处理每一个元素
+        for (auto& element : value.GetArray()) {
+            process_json(element, allocator);
+        }
+    } else if (value.IsString()) {
+        // 如果是字符串，转换为大写并更新 JSON 值
+        std::string upper_str = to_upper(value.GetString());
+        value.SetString(upper_str.c_str(), allocator);
+    }
+}
+
+int main() {
+    // 示例 JSON 字符串
+    const char* json_str = R"({"name": "john", "age": "30", "city": "new york", "languages": ["english", "french"]})";
+
+    // 解析 JSON 字符串
+    rapidjson::Document document;
+    if (document.Parse(json_str).HasParseError()) {
+        std::cerr << "Error parsing JSON!" << std::endl;
+        return 1;
+    }
+
+    // 处理 JSON 对象，将所有字符串类型的值转换为大写
+    process_json(document, document.GetAllocator());
+
+    // 将修改后的 JSON 输出为字符串
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    document.Accept(writer);
+
+    std::cout << buffer.GetString() << std::endl;
+
+    return 0;
+}
+```
+## lambda表达式递归调用
+在C++中，**lambda表达式**是可以使用递归的，但需要一些特别的技巧。因为C++的lambda表达式默认是匿名的，无法直接通过名称进行自我调用，因此我们需要显式地传递lambda表达式本身作为参数，或者使用其他技巧。
+
+### 方法1：通过参数传递自身
+
+最常见的方式是将lambda表达式定义为接受自身作为参数的一个函数。以下是一个简单的例子，展示了如何使用递归的lambda来实现阶乘函数：
+
+```cpp
+#include <iostream>
+#include <functional>
+
+int main() {
+    // 定义一个递归lambda表达式，用std::function保存它的类型
+    std::function<int(int)> factorial = [&](int n) -> int {
+        if (n <= 1)
+            return 1;
+        else
+            return n * factorial(n - 1);
+    };
+
+    // 测试
+    std::cout << "Factorial of 5: " << factorial(5) << std::endl;
+    return 0;
+}
+```
+
+在这个例子中，`factorial` 是一个 `std::function<int(int)>`，我们使用 `std::function` 的原因是它可以存储具有递归调用的lambda表达式。同时，lambda表达式通过捕获外部的 `factorial` 变量实现自我调用。
+
+### 方法2：C++20中的`auto`递归
+
+从C++20开始，可以直接用 `auto` 来推导递归lambda表达式的类型，而无需使用 `std::function`。这样代码可以更加简洁：
+
+```cpp
+#include <iostream>
+
+int main() {
+    // 递归lambda使用C++20的auto
+    auto factorial = [](int n, auto&& self) -> int {
+        if (n <= 1)
+            return 1;
+        else
+            return n * self(n - 1, self); // 递归调用自己
+    };
+
+    // 调用时需要传递lambda本身
+    std::cout << "Factorial of 5: " << factorial(5, factorial) << std::endl;
+    return 0;
+}
+```
+
+在这个C++20的版本中，我们使用了第二个参数 `self` 来显式传递lambda表达式本身，从而实现递归调用。
+
+### 总结
+
+- 在C++11到C++17中，你需要使用 `std::function` 来保存递归lambda表达式。
+- 在C++20及之后，可以利用 `auto` 和通用lambda参数来直接实现递归。
+
+## C++模板类T* operator->() const函数是什么意思？
+在C++中，`T* operator->() const` 是一个重载的运算符函数，用于让用户自定义类在使用“箭头运算符”（`->`）时表现出特定行为。
+
+### `operator->()`的作用
+“箭头运算符”（`->`）通常用于访问指针指向的对象的成员，例如：
+
+```cpp
+ptr->member;
+```
+
+这里的`ptr`是一个指针，它通过`->`运算符解引用，来访问指向对象的成员。
+
+如果一个类重载了`operator->()`，就可以控制当该类的对象使用`->`时的行为。具体来说，`operator->()`应该返回一个指针类型的对象，以允许对返回对象使用`->`访问成员。
+
+### `T* operator->() const`函数解释
+1. **`T*`**: 这是该函数的返回类型，意味着`operator->()`返回一个指向类型`T`的指针。
+2. **`operator->()`**: 这是函数名称，表示重载箭头运算符。
+3. **`const`**: 这是一个`const`成员函数，意味着该函数不能修改它所操作的对象的状态（即在`const`对象上也可以调用它）。
+
+### 举个例子
+考虑一个自定义智能指针类`SmartPointer`，它重载了`operator->()`来模拟原生指针的行为：
+
+```cpp
+template<typename T>
+class SmartPointer {
+private:
+    T* ptr; // 内部指向对象的原生指针
+public:
+    SmartPointer(T* p = nullptr) : ptr(p) {}
+    
+    // 重载operator->, 返回内部的指针
+    T* operator->() const {
+        return ptr;
+    }
+
+    ~SmartPointer() {
+        delete ptr;
+    }
+};
+
+class Test {
+public:
+    void display() {
+        std::cout << "Test::display()" << std::endl;
+    }
+};
+
+int main() {
+    SmartPointer<Test> sp(new Test());
+    sp->display();  // 通过重载的operator->访问Test对象的成员
+    return 0;
+}
+```
+
+### 详细分析
+1. `SmartPointer<Test> sp(new Test());` 创建了一个`SmartPointer`类的对象`sp`，它内部持有指向`Test`对象的指针。
+2. 当使用`sp->display();`时，编译器会调用`sp`的`operator->()`，该函数返回指向`Test`对象的原生指针。
+3. 随后，`->`会作用于返回的指针，进而调用`Test`对象的`display()`函数。
+
+### 总结
+`T* operator->() const`函数的主要作用是当类的对象使用“箭头运算符”时，自定义其行为。通常，这个运算符返回一个指针，让调用者能够通过该指针继续访问对象的成员。在智能指针类中，`operator->()`的重载是常见的，用来模拟原生指针的行为。
+
+## chrono用法
+```cpp
+#include <chrono>
+#include <iostream>
+
+using std::cout;
+using std::chrono::duration;
+using std::chrono::duration_cast;
+using std::chrono::milliseconds;
+using std::chrono::steady_clock;
+
+#define START_TIMER()                       \
+    static auto duration = milliseconds(0); \
+    const auto startTime { steady_clock::now() };
+
+#define END_TIMER()                                               \
+    const auto endTime { steady_clock::now() };                   \
+    duration += duration_cast<milliseconds>(endTime - startTime); \
+    cout << __func__ << " use " << duration.count() << " milliseconds\n";
+
+int main()
+{
+    START_TIMER();
+
+    // do something
+
+    END_TIMER();
+}
+```
+宏函数添加参数可考虑：
+```cpp
+#define START_TIMER(n)                         \
+    static auto duration##n = milliseconds(0); \
+    const auto  startTime##n{steady_clock::now()};
+
+#define END_TIMER(n)                                                       \
+    const auto endTime##n{steady_clock::now()};                            \
+    duration##n += duration_cast<milliseconds>(endTime##n - startTime##n); \
+    cout << "duration" << #n << " use " << duration##n.count() << " milliseconds\n";
+```
+
+## 默认情况下，把成员函数设为const
+CG Con.2
+## 默认情况下，将对象赋`const/constexpr[Con.1]`
+两个例外
+- 函数要返回的对象
+- 值传递的参数
+
+## 枚举值不要全大写
+Enum.5

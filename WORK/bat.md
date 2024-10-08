@@ -210,3 +210,44 @@ endlocal
 6. `endlocal`：结束本地环境块。
 
 请确保在执行此脚本前备份重要数据，因为这将永久删除指定目录下的所有文件和文件夹。
+
+## bat终止脚本但保留之前输出记录
+在批处理文件（.bat）中，如果想终止脚本的执行但保留之前的输出记录，你可以使用以下几种方法：
+
+### 1. 使用 `goto` 指令
+你可以使用 `goto` 指令将执行跳转到脚本的末尾，从而停止脚本的进一步执行，但保留之前的输出。
+
+```batch
+echo This will be executed
+goto :EOF  (or goto :end if you have a label named :end)
+echo This will NOT be executed
+
+:end
+```
+
+`goto :EOF` 会直接跳转到脚本的结尾，而不再执行后续的命令。
+
+### 2. 使用 `exit /B` 指令
+你可以使用 `exit /B` 退出当前批处理脚本或子程序，而不关闭整个命令行窗口。
+
+```batch
+echo This will be executed
+exit /B
+echo This will NOT be executed
+```
+
+这样做也会保留之前的输出，但终止了脚本的进一步执行。
+
+### 3. 使用 `rem` 或 `::` 注释掉后续命令
+你还可以选择简单地注释掉你不想执行的部分：
+
+```batch
+echo This will be executed
+rem echo This will NOT be executed
+
+:: Another way to comment
+:: echo This will NOT be executed
+```
+
+以上这些方法都可以有效地终止批处理脚本的执行，同时保留之前的输出记录。
+

@@ -79,3 +79,16 @@ https://blog.csdn.net/orangebench11/article/details/126111356
 ## C4996转化为错误
 https://stackoverflow.com/questions/20448102/why-does-visual-studio-2013-issue-a-c4996-error
 与sdl检查开关有关
+
+## C++编译时ilk文件是什么文件？
+在C++编译过程中，`.ilk`文件是一个“增量链接文件”（Incremental Link File）。它是由微软的Visual Studio编译器生成的，主要用于加快链接过程。
+
+### 详细说明：
+- **用途**：`.ilk`文件存储了链接器在上一次增量链接中使用的状态信息。增量链接是一种优化技术，允许在代码有部分更改时，链接器只对修改过的部分进行重新链接，而不是整个程序。这种方式显著加快了链接速度，尤其是在大型项目中。
+  
+- **生成**：在使用增量链接时，Visual Studio会在构建过程中生成一个与目标文件（通常是`.exe`或`.dll`文件）同名的`.ilk`文件。
+
+- **作用**：链接器通过读取`.ilk`文件中的信息，了解哪些部分需要重新链接，从而避免不必要的工作，提高编译速度。
+
+- **管理**：`.ilk
+

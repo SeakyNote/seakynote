@@ -32,7 +32,7 @@ https://blog.csdn.net/weixin_44819948/article/details/115497784
 
 https://github.com/tomxuetoy/Qt_age/blob/master/main.cpp
 
-```c++
+```cpp
 QHBoxLayout *layout = new QHBoxLayout;
 layout->addWidget(spinBox);
 layout->addWidget(slider);
@@ -60,7 +60,7 @@ https://blog.csdn.net/weixin_49601095/article/details/118635908
 https://blog.csdn.net/gezhi_dove/article/details/105063695
 
 ### 子widget填充父widget
-```c++
+```cpp
 // 创建一个父widget和子widget
 QWidget* parentWidget = new QWidget();
 QWidget* childWidget = new QWidget(parentWidget);
@@ -88,7 +88,7 @@ childWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 ### 对QComboBox设置text和Data
 
-```c++
+```cpp
 ui->comboBox->addItem(tr("Chinese"),Tmk::Chinese);
 ui->comboBox->addItem(tr("English"),Tmk::English);
 
@@ -163,9 +163,9 @@ https://blog.csdn.net/coldplayplay/article/details/78550083
 ### 编码显示测试
 
 |                | QString | QStringLiteral |
-| :------------: | :-----: | :--: |
-| UTF-8          | OK | NOK |
-| UTF-8 with Bom | NOK | OK |
+| :------------: | :-----: | :------------: |
+|     UTF-8      |   OK    |      NOK       |
+| UTF-8 with Bom |   NOK   |       OK       |
 
 ### Qt翻译——简洁步骤
 
@@ -354,11 +354,11 @@ https://blog.csdn.net/qq_41768362/article/details/111717619
 
 ### qt字体大小发现的规律
 
-|                             | 无缩放     | 带缩放                                  | 带缩放带hidpi（此时整体程序变大）                            |
-| --------------------------- | ---------- | --------------------------------------- | ------------------------------------------------------------ |
-| 未设置字体大小场景          | 9pt大小    | pointSize值减小，实际显示大小不变       | ***pointSize值减小，实际显示维持无缩放状态，相较于整体程序小了*** |
-| 设置字体大小为pointSize场景 | 按设定大小 | ***pointSize值不变，实际显示大小变大*** | pointSize值不变，实际显示与缩放相同；***但字体线条粗细存在问题*** |
-| 设置字体大小为pixelSize场景 | 按设定大小 | pixelSize值不变，实际显示大小不变       | pixelSize值不变，实际显示随程序变大；***但字体线条粗细存在问题*** |
+|                    | 无缩放   | 带缩放                         | 带缩放带hidpi（此时整体程序变大）                    |
+| ------------------ | ----- | --------------------------- | -------------------------------------- |
+| 未设置字体大小场景          | 9pt大小 | pointSize值减小，实际显示大小不变       | **pointSize值减小，实际显示维持无缩放状态，相较于整体程序小了** |
+| 设置字体大小为pointSize场景 | 按设定大小 | ***pointSize值不变，实际显示大小变大*** | pointSize值不变，实际显示与缩放相同；**但字体线条粗细存在问题** |
+| 设置字体大小为pixelSize场景 | 按设定大小 | pixelSize值不变，实际显示大小不变       | pixelSize值不变，实际显示随程序变大；**但字体线条粗细存在问题**  |
 
 ### qt支持hidpi后中文字体粗细不一的问题处理
 
@@ -368,7 +368,7 @@ https://blog.csdn.net/qq_41768362/article/details/111717619
 
 ### qt获取系统字体
 
-```c++
+```cpp
 // 获取字体数据库
 QFontDatabase fontDatabase;
 
@@ -436,7 +436,7 @@ https://blog.csdn.net/weixin_43892328/article/details/122615847
 
 ## 使用QPalette设置背景颜色
 
-```c++
+```cpp
 QPalette wdtPalette = ui->widget->palette();
 wdtPalette.setColor(QPalette::Window, Qt::red);
 ui->widget->setPalette(wdtPalette);

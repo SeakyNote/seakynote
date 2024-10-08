@@ -120,3 +120,11 @@ $:git pull
 ## git仓库文件大小写改名问题
 - windows平台下仅变更大小写不会触发git uncommit
 - 如果要仅变更大小写需要先删除后重新添加
+
+## git lfs pull拉取失败
+- 可能有多个远端分支，其中某些没有对应文件
+- 需要指定remote
+	- 如git lfs pull origin
+
+## Gitee 自已提交的代码提交人头像为他人、码云上独自开发的项目显示为 2 个开发者
+https://blog.csdn.net/jiangyu1013/article/details/97630479

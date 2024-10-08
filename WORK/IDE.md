@@ -155,3 +155,6 @@ https://blog.csdn.net/qq_21237549/article/details/137559757
 
 ## msvc C++版本显示错误
 编译增加 `/Zc:__cplusplus`
+
+## 正则表达式替换空行
+^\s*\n

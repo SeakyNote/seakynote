@@ -3,7 +3,7 @@
 https://zhuanlan.zhihu.com/p/454373256
 
 ## 翻转链表
-```c++
+```cpp
 ListNode* reverseList(ListNode* head) {
     ListNode* prev = nullptr;
     ListNode* current = head;
@@ -22,7 +22,7 @@ ListNode* reverseList(ListNode* head) {
 
 ## 获得整数转二进制置位的个数
 
-```c++
+```cpp
 int sumIndicesWithKSetBits(vector<int> &nums, int k)
 {
     int sum = 0;
@@ -41,7 +41,7 @@ int sumIndicesWithKSetBits(vector<int> &nums, int k)
 ```
 
 ## dot解析成C++类
-```c++
+```cpp
 #include <iostream>
 #include <fstream>
 #include <string>
