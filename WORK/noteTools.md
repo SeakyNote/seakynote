@@ -34,3 +34,20 @@ https://www.cnblogs.com/minjh/p/16203599.html
 
 ## docsify C++代码高亮
 https://github.com/docsifyjs/docsify/discussions/1710
+
+## docsify设置非严格换行
+```js
+window.$docsify = {
+	markdown: {
+		breaks: true,
+	},
+```
+https://marked.js.org/using_advanced
+https://stackoverflow.com/questions/76833921/how-to-render-line-breaks-to-single-newlines-in-docsifiy
+## docsify设置正文与无序列表间距
+```js
+p+ul {
+    margin-top: -20px;
+}
+```
+https://stackoverflow.com/questions/7759229/remove-space-between-paragraph-and-unordered-list
