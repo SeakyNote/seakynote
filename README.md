@@ -21,6 +21,8 @@
 
 [《人件》](Peopleware/Peopleware.md)
 
+[《反脆弱》](ANTIFRAGILE/反脆弱.md)
+
 [装机](computer/装机.md)
 
 [linux经验](Linux/experience.md)
