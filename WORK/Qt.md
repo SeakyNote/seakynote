@@ -589,3 +589,140 @@ int main(int argc, char *argv[]) {
 ## qt商业版无许可移除敏感文件单独打包，配合vs2022编译
 - qmake编译报license问题，cmake编译运行正常
 - cmake是开源的，qmake是商业公司的
+
+## QDialog添加确定取消等按钮
+使用QDialogButtonBox
+
+## Qt发送信号报编译问题
+- 可能是moc文件未生成
+- 编译时需要将头文件加入，同步编译
+
+## Qt中QTreeWidget::itemEntered
+### Qt中QTreeWidget::itemEntered这个信号的含义是什么？
+在 Qt 中，`QTreeWidget::itemEntered` 信号的含义是：当鼠标指针进入 `QTreeWidget` 中某个 `QTreeWidgetItem` 的区域时，触发此信号。这个信号可以用来响应用户将鼠标悬停到树形控件的某一项上。
+
+#### `itemEntered` 信号的定义
+```cpp
+void QTreeWidget::itemEntered(QTreeWidgetItem *item, int column);
+```
+
+#### 参数说明
+- `item`：指针，指向鼠标指向的 `QTreeWidgetItem` 项。
+- `column`：整数，指示了该 `QTreeWidgetItem` 中的具体列。
+
+#### 使用场景
+`itemEntered` 信号一般用于鼠标悬停到 `QTreeWidgetItem` 上时进行相应处理，比如显示提示信息、改变外观等。不过，触发该信号的前提是树形控件的 `QTreeWidget` 要设置了 `setMouseTracking(true)`，这样才能在鼠标经过时持续跟踪项的变化。
+
+#### 示例代码
+```cpp
+// 假设你有一个 QTreeWidget *treeWidget
+treeWidget->setMouseTracking(true); // 必须启用鼠标跟踪
+
+connect(treeWidget, &QTreeWidget::itemEntered, [](QTreeWidgetItem *item, int column) {
+    if (item) {
+        qDebug() << "Mouse entered item:" << item->text(column);
+    }
+});
+```
+
+在这个例子中，当鼠标进入某个 `QTreeWidgetItem` 的区域时，会输出该项的文本内容。
+
+### 如果未设置treeWidget->setMouseTracking(true)，为什么选中或框选的时候会触发？
+在 Qt 中，`itemEntered` 信号的触发依赖于 `QTreeWidget` 是否启用了鼠标跟踪功能 (`setMouseTracking(true)`)。不过，正如你所提到的，即使没有设置鼠标跟踪，`itemEntered` 信号在某些情况下仍然会触发，比如当你**选中或框选**某个项时。
+
+这是因为在默认情况下，Qt 控件的鼠标事件跟踪行为是与用户交互相关的。具体来说，当你执行以下操作时，Qt 内部的事件处理机制可能会导致 `itemEntered` 信号的触发：
+
+1. **选中项时**：当你点击选中一个 `QTreeWidgetItem` 时，鼠标的点击事件会导致控件在相应的项上聚焦。即使未启用鼠标跟踪，Qt 仍会检测并发送这个事件，从而导致 `itemEntered` 信号的触发。
+
+2. **框选项时**：框选操作时，鼠标在拖动过程中会经过多个项，这时鼠标的移动事件 (`mouseMoveEvent`) 和项的选择变更事件可能都会触发 `itemEntered` 信号。虽然没有开启鼠标跟踪，但由于拖动框选行为会涉及对各个项的检测，`itemEntered` 仍然有可能被触发。
+
+#### 内部机制解释
+`setMouseTracking(true)` 主要控制的是**鼠标没有按下**的情况下，鼠标指针在控件上移动时，是否应该发出鼠标移动事件。如果没有启用鼠标跟踪，只有当鼠标按键按下或者有其他与鼠标有关的交互（如点击、拖动）时，才会发出相应的事件。
+
+因此，在选中和框选的情况下，虽然你没有开启鼠标跟踪，**鼠标的点击和拖动操作**已经足够触发与项相关的事件处理，从而导致 `itemEntered` 信号的发出。这种行为依赖于 Qt 内部的事件传播机制。
+
+#### 结论
+即使没有开启 `setMouseTracking(true)`，`itemEntered` 信号在某些用户交互场景下依然可能触发，这是因为选中和框选操作仍然涉及鼠标事件的传播与处理。
+
+### 框选有没有专门的信号？
+在 Qt 中，**框选（rubber band selection）**操作并没有专门的信号来直接标识框选行为完成，但可以通过一些已有的信号与事件结合，实现对框选的检测和处理。
+
+#### 检测框选的替代方法
+虽然没有专门的框选信号，但你可以利用以下信号与事件组合来间接检测和处理框选行为。
+
+##### 1. **`QTreeWidget::itemSelectionChanged`** 信号
+这是一个常用信号，当树形控件中的选中项发生任何变化时（包括框选和单项选择），都会触发该信号：
+
+```cpp
+connect(treeWidget, &QTreeWidget::itemSelectionChanged, []() {
+    qDebug() << "Selection changed!";
+});
+```
+- **优点**：简单有效，可以检测到框选后选中的项发生变化。
+- **缺点**：无法区分用户是通过框选还是单击选择触发的变化。
+
+##### 2. **事件过滤器（Event Filter）** 
+使用事件过滤器可以捕获 `mousePressEvent`、`mouseMoveEvent` 和 `mouseReleaseEvent`，从而检测是否发生了框选操作。
+
+示例代码：
+```cpp
+class SelectionFilter : public QObject {
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override {
+        if (event->type() == QEvent::MouseButtonPress) {
+            qDebug() << "Mouse press detected.";
+        } else if (event->type() == QEvent::MouseMove) {
+            qDebug() << "Mouse move detected.";
+        } else if (event->type() == QEvent::MouseButtonRelease) {
+            qDebug() << "Mouse release detected. Possibly a rubber band selection.";
+        }
+        return QObject::eventFilter(obj, event); // 继续正常事件处理
+    }
+};
+
+// 在你的代码中安装事件过滤器
+SelectionFilter *filter = new SelectionFilter();
+treeWidget->viewport()->installEventFilter(filter);
+```
+- **说明**：通过检测 `MouseButtonPress`、`MouseMove` 和 `MouseButtonRelease` 事件，可以推断是否进行了框选操作。
+- **优点**：能够捕捉更多细节，比如用户是否拖动鼠标来进行框选。
+- **缺点**：需要手动处理事件，逻辑稍微复杂。
+
+##### 3. **自定义框选逻辑与信号**
+如果你的框选操作对某些行为有特定需求（比如需要确认框选结束后做出反应），可以在上述基础上自定义信号。
+
+例如：
+```cpp
+class MyTreeWidget : public QTreeWidget {
+    Q_OBJECT
+signals:
+    void rubberBandSelectionFinished();
+
+protected:
+    void mouseReleaseEvent(QMouseEvent *event) override {
+        QTreeWidget::mouseReleaseEvent(event);  // 调用基类的事件处理
+        if (event->button() == Qt::LeftButton) {
+            emit rubberBandSelectionFinished();
+        }
+    }
+};
+```
+
+使用示例：
+```cpp
+MyTreeWidget *treeWidget = new MyTreeWidget();
+connect(treeWidget, &MyTreeWidget::rubberBandSelectionFinished, []() {
+    qDebug() << "Rubber band selection finished.";
+});
+```
+- **优点**：通过自定义信号，你可以精确控制框选结束后的处理逻辑。
+
+#### 总结
+虽然 Qt 没有专门的框选信号，但你可以通过以下方式检测和处理框选操作：
+1. 使用 **`itemSelectionChanged`** 信号监控选中项的变化。
+2. 利用 **事件过滤器** 捕获鼠标事件，推断是否进行了框选。
+3. **自定义信号与事件处理**，实现更精确的控制逻辑。
+
+根据需求的不同，可以选择合适的方法来处理框选操作。
+
+

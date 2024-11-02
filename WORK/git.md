@@ -128,3 +128,12 @@ $:git pull
 
 ## Gitee 自已提交的代码提交人头像为他人、码云上独自开发的项目显示为 2 个开发者
 https://blog.csdn.net/jiangyu1013/article/details/97630479
+
+## git设置对文件大小写敏感
+```
+[core]
+	ignorecase = false
+```
+
+## git文件名大小写变更后，无法checkout
+按说明先删除名称变更的文件再检出

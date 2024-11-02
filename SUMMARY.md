@@ -74,6 +74,7 @@
   * [工具](WORK/tools.md)
   * [虚拟机](WORK/vm.md)
   * [windows](WORK/windows.md)
+  * [lua](WORK/lua.md)
 * 分享
   * [arch linux+kde plasma桌面系统搭建与使用经验](share/arch%20linux+kde%20plasma桌面系统搭建与使用经验.md)
   * [基于docsify+GitHub Pages搭建文档网站](share/基于docsify+GitHub%20Pages搭建文档网站.md)

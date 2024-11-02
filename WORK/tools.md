@@ -36,3 +36,8 @@ https://www.eet-china.com/mp/a127830.html
 
 ## excel表格自动换行
 开始-自动换行
+
+## ffmpeg转gif
+输入和输出之间夹参数可压缩大小
+`ffmpeg -i 20241008_093728.mp4 -s 958x580 20241008_093728.gif`
+`ffmpeg -i 20241008_093728.mp4 -r 5 20241008_093728.gif`

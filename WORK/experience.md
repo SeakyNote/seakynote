@@ -79,3 +79,6 @@ https://norvig.com/21-days.html
 - **Change lowercase to uppercase**: 更通俗的说法，指的是将小写字母改成大写字母。
 
 另外，编程中常使用 **capitalize**（将首字母大写）或者 **to uppercase**（将所有字母变为大写）。
+
+## 性能调优
+调优时尽量拿实际的测试用例调优，小用例的运行时间结构可能与大模型截然不同。

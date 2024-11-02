@@ -959,3 +959,242 @@ CG Con.2
 
 ## 枚举值不要全大写
 Enum.5
+
+## C++什么时候使用命名空间下的函数，什么时候使用类中的静态成员函数？
+在C++中，命名空间下的函数和类中的静态成员函数都有各自的适用场景和设计意图。下面详细解释两者在不同情况下的使用选择：
+
+### 1. **命名空间下的函数**
+命名空间（`namespace`）的主要目的是**避免命名冲突**。命名空间下的函数通常适用于那些与具体类无关的函数，或者说它们与某一具体对象的状态没有直接关联。
+
+#### 适用场景：
+- **工具函数/辅助函数**：如果函数的逻辑不依赖于某个类的成员变量或状态，命名空间是很好的选择。比如，数学库的常用函数（如`sin`、`cos`）就放在标准库的`std::`命名空间中。
+- **全局功能**：如果函数在整个项目中是通用的，不依赖于特定对象的状态，使用命名空间可以更好地组织代码。例如，日志系统、文件操作、字符串处理等可以放在一个工具类的命名空间下。
+- **模块化设计**：命名空间帮助将功能模块化，便于维护。你可以将不同模块的函数放在不同命名空间下，如`math::add()`、`string::concat()`等。
+
+#### 使用示例：
+```cpp
+namespace MathUtils {
+    int add(int a, int b) {
+        return a + b;
+    }
+}
+```
+
+调用方式：
+```cpp
+int result = MathUtils::add(5, 3);
+```
+
+### 2. **类中的静态成员函数**
+静态成员函数属于类，但不依赖于具体的实例。它们**可以访问类的静态成员变量**，但不能访问非静态成员变量（因为静态函数不依赖具体对象）。
+
+#### 适用场景：
+- **逻辑上属于类的功能**：如果函数逻辑与类紧密关联，但又不依赖于对象实例（比如需要操作静态数据成员或者是对类的某些行为进行封装），静态成员函数是不错的选择。
+- **访问类的静态数据成员**：如果一个函数需要访问或修改类的静态成员变量，那么它应该作为类的静态成员函数。
+- **工厂模式**：静态成员函数通常用于工厂模式中，用于创建类的对象。
+- **单例模式**：单例模式中，静态成员函数通常用于控制类实例的唯一性。
+
+#### 使用示例：
+```cpp
+class Calculator {
+public:
+    static int add(int a, int b) {
+        return a + b;
+    }
+};
+```
+
+调用方式：
+```cpp
+int result = Calculator::add(5, 3);
+```
+
+### 3. **对比与选择**
+- **与类是否相关**：如果函数与类没有强关联，放在命名空间中；如果函数逻辑与类有关联，特别是与类的静态数据或功能相关，那么应该放在类的静态成员函数中。
+- **功能归属**：命名空间适用于模块级的划分，而静态成员函数更适用于类内部的功能封装。
+- **代码可读性**：如果一个函数属于某类的核心逻辑，将其作为静态成员函数可以提高代码的可读性，使得逻辑清晰。而如果函数与类关系不大，放在命名空间中可以避免不必要的类耦合。
+
+### 4. **命名空间下的函数和静态成员函数的常见误区**
+- **不要滥用静态成员函数**：并非所有与类相关的功能都需要作为静态成员函数，如果函数实际上不依赖类的状态，考虑使用命名空间。
+- **命名空间也可以包含类**：命名空间不仅可以包含函数，也可以包含类。可以将类和函数都归类到同一个命名空间中以实现模块化的代码组织。
+
+### 5. **组合使用的场景**
+有时可以组合使用命名空间和静态成员函数。例如，创建一个与某个功能模块相关的命名空间，其中包含多个类，而这些类的某些静态成员函数实现具体的功能。
+
+### 总结
+- **命名空间下的函数**：适用于与类无关的全局函数，通常用于工具类、辅助函数或模块化设计。
+- **类的静态成员函数**：适用于与类逻辑相关、但不依赖于对象实例的函数，通常用于访问类的静态成员变量、工厂函数、单例模式等。
+
+通过合理使用命名空间和静态成员函数，能够提高代码的组织性、可维护性和可读性。
+
+## 不要给命名空间std加东西
+SL.3
+
+## C++中查找容器中是否有某个元素，一般用哪个容器？
+在 C++ 中，查找容器中是否有某个元素的效率和方便性取决于容器的类型。不同的容器在查找操作上有不同的表现：
+
+1. **`std::set` 和 `std::unordered_set`**:
+   - 如果查找是常见操作，且对元素不需要顺序存储，推荐使用这些容器。
+   - **`std::set`** 是基于平衡二叉树（通常是红黑树）实现的，查找的时间复杂度是 O(log n)。
+   - **`std::unordered_set`** 是基于哈希表实现的，查找的时间复杂度是平均 O(1)（最坏情况下为 O(n)，取决于哈希冲突的处理）。
+
+   **示例：**
+   ```cpp
+   #include <set>
+   #include <unordered_set>
+
+   std::set<int> s = {1, 2, 3, 4};
+   if (s.find(3) != s.end()) {
+       // 元素 3 存在
+   }
+
+   std::unordered_set<int> us = {1, 2, 3, 4};
+   if (us.find(3) != us.end()) {
+       // 元素 3 存在
+   }
+   ```
+
+2. **`std::vector`**:
+   - 如果容器是 `std::vector`，可以使用标准库算法 `std::find` 进行查找，时间复杂度为 O(n)。
+   
+   **示例：**
+   ```cpp
+   #include <vector>
+   #include <algorithm>
+
+   std::vector<int> v = {1, 2, 3, 4};
+   if (std::find(v.begin(), v.end(), 3) != v.end()) {
+       // 元素 3 存在
+   }
+   ```
+
+3. **`std::map` 和 `std::unordered_map`**:
+   - 这两个容器用于存储键值对。如果你需要查找某个键是否存在，使用 `std::map` 或 `std::unordered_map` 非常高效。
+   - **`std::map`** 的查找时间复杂度是 O(log n)。
+   - **`std::unordered_map`** 的查找时间复杂度是 O(1)（平均情况）。
+
+   **示例：**
+   ```cpp
+   #include <map>
+   #include <unordered_map>
+
+   std::map<int, int> m = {{1, 10}, {2, 20}, {3, 30}};
+   if (m.find(2) != m.end()) {
+       // 键 2 存在
+   }
+
+   std::unordered_map<int, int> um = {{1, 10}, {2, 20}, {3, 30}};
+   if (um.find(2) != um.end()) {
+       // 键 2 存在
+   }
+   ```
+
+### 总结：
+- **快速查找**：如果需要快速查找某个元素，建议使用 **`std::unordered_set`** 或 **`std::unordered_map`**。
+- **顺序敏感**：如果元素有顺序，或者不介意 O(n) 的查找开销，可以使用 **`std::vector`** 和 `std::find`。
+- **有序数据结构**：如果需要有序存储并支持高效查找，使用 **`std::set`** 或 **`std::map`**。
+
+## all_of/any_of/none_of
+https://en.cppreference.com/w/cpp/algorithm/all_any_none_of
+
+## 计时测试宏迭代
+```cpp
+#include <chrono>
+#include <iostream>
+
+using std::cout;
+using namespace std::chrono;
+
+#define START_TIMER(n) \
+    INIT_TIMER(n)      \
+    START_TIMER_NINIT(n);
+
+#define END_TIMER(n)   \
+    END_TIMER_NCOUT(n) \
+    COUT_TIMER(n)
+
+#define END_TIMER_NCOUT(n)                                                \
+    const auto endTime##n { steady_clock::now() };                        \
+    duration##n += duration_cast<nanoseconds>(endTime##n - startTime##n); \
+    START_TIMER_NINIT(n##l);                                              \
+    const auto endTime##n##l { steady_clock::now() };                     \
+    duration##n -= duration_cast<nanoseconds>(endTime##n##l - startTime##n##l);
+
+#define COUT_TIMER(n)                                                           \
+    cout << __func__ << ' ' << #n << " use " << duration##n.count() / 1'000'000 \
+         << " milliseconds\n";
+
+#define INIT_TIMER(n) static auto duration##n = nanoseconds(0);
+
+#define START_TIMER_NINIT(n) const auto startTime##n { steady_clock::now() };
+```
+非宏函数形式
+```cpp
+#include <chrono>
+#include <iostream>
+
+using std::cout;
+using namespace std::chrono;
+
+class Timer {
+public:
+    Timer()
+        : duration(nanoseconds(0))
+    {
+    }
+
+    // 开始计时
+    void start()
+    {
+        startTime = steady_clock::now();
+    }
+
+    // 结束计时但不输出
+    void end_no_output()
+    {
+        auto endTime = steady_clock::now();
+        duration += duration_cast<nanoseconds>(endTime - startTime);
+
+        // 二次计时修正
+        auto startTime_l = steady_clock::now();
+        auto endTime_l = steady_clock::now();
+        duration -= duration_cast<nanoseconds>(endTime_l - startTime_l);
+    }
+
+    // 输出计时结果
+    void output(const char* funcName, int timerNo) const
+    {
+        cout << funcName << ' ' << timerNo << " use " << duration.count() / 1'000'000 << " milliseconds\n";
+    }
+
+    // 结束计时并输出
+    void end(const char* funcName, int timerNo)
+    {
+        end_no_output();
+        output(funcName, timerNo);
+    }
+
+private:
+    steady_clock::time_point startTime;
+    nanoseconds duration;
+};
+
+// 用法示例
+void example()
+{
+    Timer timer1;
+
+    // 开始计时
+    timer1.start();
+
+    // 结束计时并输出结果
+    timer1.end(__func__, 1);
+}
+
+int main()
+{
+    example();
+    return 0;
+}
+
+```

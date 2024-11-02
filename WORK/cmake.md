@@ -235,3 +235,7 @@ https://www.jetbrains.com/lp/devecosystem-2022/cpp/#Which-unit-testing-framework
 https://gitee.com/bigearrabbit/KevinCmake/tree/master/cmake_install
 
 https://www.bilibili.com/video/BV1Ep421Q7Rt
+
+## 调整警告级别
+https://cmake.org/cmake/help/latest/command/add_compile_options.html
+`add_compile_options(/W4)`

@@ -2,7 +2,7 @@
 
 1. 函数返回值类型问题,如：应返回指针，但返回了bool
 2. QString直接与double相加
-3. 非标准扩展。QVector及vector "swap trick"使用错误，应写为vector<T>().swap(vec);
+3. 非标准扩展。QVector及vector "swap trick"使用错误，应写为`vector<T>().swap(vec);`
 4. 非标准扩展。非常量左值引用绑定临时右值问题，按需改成常量左值引用或普通变量
 5. 字符串判断为空写成了字符串地址判断为空。(C4130)
 6. 非标准扩展。函数形参为引用，但使用了临时右值。
