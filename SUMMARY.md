@@ -8,6 +8,7 @@
 * [《少有人走的路》](RoadLessTraveled/少有人走的路.md)
 * [《人件》](Peopleware/Peopleware.md)
 * [《反脆弱》](ANTIFRAGILE/反脆弱.md)
+* [《娱乐至死》](AmusingOurselvesToDeath/娱乐至死.md)
 * [装机](computer/装机.md)
 * [linux经验](Linux/experience.md)
 * 《学会提问》
