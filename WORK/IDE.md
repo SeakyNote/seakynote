@@ -158,3 +158,6 @@ https://blog.csdn.net/qq_21237549/article/details/137559757
 
 ## 正则表达式替换空行
 ^\s*\n
+
+## vs2022高级保存选项开启
+https://blog.csdn.net/weixin_44335538/article/details/125263750

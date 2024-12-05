@@ -1340,3 +1340,145 @@ void foo() {
 总结：
 - 栈上：`vector` 对象本身（包含管理堆内存的指针和元数据）。
 - 堆上：存储 `vector` 元素的动态数组。
+
+## 使用const auto获取指针是对应指针不可变还是指针指向对象不可变？
+使用 `const auto` 获取指针时，`const` 的修饰只作用于 `auto` 推导的类型本身，而不会影响到指针指向的对象。因此，`const auto` 表示指针本身不可变，而不是指针指向的对象不可变。
+
+例如：
+
+```cpp
+int x = 10;
+int* ptr = &x;
+const auto p = ptr; // p 是一个 const int* 类型的指针
+```
+
+在这段代码中，`const auto p = ptr;` 会将 `p` 推导为 `int* const` 类型，表示 `p` 本身是一个不可变的指针（即不能重新赋值），但通过 `p` 仍然可以修改指向的对象 `x` 的值：
+
+```cpp
+*p = 20; // 合法，可以修改指向对象的值
+p = nullptr; // 不合法，p 是一个 const 指针，不能重新指向其他地址
+```
+
+### 需要注意的情况
+如果希望指针指向的对象也不可变，可以使用 `const` 修饰原始指针或智能指针的类型，例如 `const int*` 或 `std::shared_ptr<const int>`：
+
+```cpp
+const auto p = static_cast<const int*>(ptr); // p 是一个 const int* const 类型的指针
+*p = 20; // 不合法，p 指向的对象不可变
+```
+
+总结来说，`const auto` 使指针本身不可变，但指向的对象仍然可以修改。
+
+## C++中为什么函数参数为const引用时，可以通过右值转化？
+在C++中，当函数参数是`const`引用时，可以接受右值作为参数，这是因为`const`引用扩展了其引用范围，使得它可以绑定到右值。具体原因如下：
+
+1. **右值的临时性**：右值通常是临时对象，生命周期很短，无法绑定到普通的左值引用。为了避免在调用函数时创建不必要的拷贝，C++允许`const`引用绑定到右值。这样做可以直接引用临时对象，而不是创建一个副本，从而提高效率。
+
+2. **`const`引用的安全性**：通过将参数设为`const`引用，函数承诺不会修改传入的对象，因此临时对象在函数内部也不会被改变。这样就消除了修改右值对象的风险，保证了代码的安全性和稳定性。
+
+3. **允许代码的复用性**：`const`引用可以同时绑定到左值和右值，因此函数参数使用`const`引用使得函数可以接受左值和右值作为参数，提高了函数的通用性。例如：
+
+   ```cpp
+   void func(const std::string& str) {
+       std::cout << str << std::endl;
+   }
+
+   int main() {
+       std::string s = "Hello";
+       func(s);               // 左值
+       func("World");         // 右值
+       return 0;
+   }
+   ```
+
+   在上面的例子中，`func`可以接受`std::string`类型的左值`str`，也可以接受右值（如字符串字面值`"World"`），这是因为`const`引用能够绑定到右值。
+
+总结来说，`const`引用允许绑定右值的设计使得代码更灵活且高效，同时保证了临时对象在函数内部的不可修改性。
+
+## const auto是顶层const
+只是不能修改指针本身
+```cpp
+#include <memory>
+struct A {
+    int v = 0;
+};
+
+int main()
+{
+    A* const a = new A();
+    a->v = 2; // 顶层const
+    const A* b = new A();
+    b = nullptr; // 底层const
+    const auto c = new A();
+    c->v = 3; // 顶层const
+    const auto d = std::make_shared<A>();
+    d->v = 4; // 顶层const
+    return 0;
+}
+```
+
+## 完全定义在类中的成员函数是隐式内联的
+https://en.cppreference.com/w/cpp/language/inline
+A function defined entirely inside a class/struct/union definition, whether it's a member function or a non-member friend function, is implicitly an inline function.
+
+## 范围for循环中直接使用函数返回的引用验证
+```cpp
+#include <chrono>
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+#define START_TIMER \
+    const auto start { std::chrono::steady_clock::now() }
+
+#define END_TIMER                                                        \
+    const auto end { std::chrono::steady_clock::now() };                 \
+    const std::chrono::duration<double> elapsed_seconds { end - start }; \
+    cout << elapsed_seconds.count() << '\n'
+
+struct TestCls {
+    vector<int> vec;
+    const vector<int>& getVec() const { return vec; }
+    vector<int> getVecCopy() const { return vec; }
+};
+
+int main()
+{
+    TestCls test;
+    test.vec = vector(1000000000, 5);
+    {
+        START_TIMER;
+        for (auto cur : test.getVec()) {
+        }
+        END_TIMER;
+    }
+    {
+        START_TIMER;
+        for (auto cur : test.getVecCopy()) {
+        }
+        END_TIMER;
+    }
+    {
+        START_TIMER;
+        auto& ref = test.getVec();
+        END_TIMER;
+    }
+    {
+        START_TIMER;
+        auto refCopy = test.getVec();
+        END_TIMER;
+    }
+    {
+        START_TIMER;
+        auto copy = test.getVecCopy();
+        END_TIMER;
+    }
+}
+```
+结论：范围for循环使用函数返回引用耗时更小，返回的引用不会经过拷贝过程
+
+## vector
+- 随机访问——常数 O(1)
+- 在末尾插入或移除元素——均摊常数 O(1)
+- 插入或移除元素——与到 vector 结尾的距离成线性 O(n) 

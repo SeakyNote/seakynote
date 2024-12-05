@@ -1198,3 +1198,688 @@ int main()
 }
 
 ```
+## double转string
+```cpp
+#include <cmath>
+#include <iomanip> // for std::setprecision
+#include <iostream>
+#include <sstream> // for std::ostringstream
+
+using namespace std;
+
+int main()
+{
+    auto dVal = 77.784;
+    auto fVal = 77.784f;
+    auto dR = round(dVal * 100) / 100;
+    auto fR = round(fVal * 100) / 100;
+
+    // 使用 std::ostringstream 将结果转换为字符串
+    ostringstream ossD, ossF;
+
+    // 设置输出格式为固定小数点格式，并设置精度为2
+    ossD << fixed << setprecision(2) << dR;
+    ossF << fixed << setprecision(2) << fR;
+
+    // 获取转换后的字符串
+    string dStr = ossD.str();
+    string fStr = ossF.str();
+
+    // 输出字符串
+    cout << "Double as string: " << dStr << '\n';
+    cout << "Float as string: " << fStr << '\n';
+
+    return 0;
+}
+```
+## 去掉末尾零
+```cpp
+#include <cmath>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+
+using namespace std;
+
+int main()
+{
+    auto dVal = 77.784;
+    auto fVal = 77.784f;
+    auto dR = round(dVal * 100) / 100;
+    auto fR = round(fVal * 100) / 100;
+
+    // 使用 std::ostringstream 转换为字符串，自动去掉末尾零
+    ostringstream ossD, ossF;
+
+    // 设置输出格式为默认格式，并设置精度为最大有效位
+    ossD << std::fixed << std::setprecision(5) << dR;
+    ossF << std::fixed << std::setprecision(5) << fR;
+
+    // 获取转换后的字符串
+    string dStr = ossD.str();
+    string fStr = ossF.str();
+
+    // 去掉末尾零
+    dStr.erase(dStr.find_last_not_of('0') + 1, string::npos);
+    if (dStr.back() == '.') dStr.pop_back();  // 如果末尾是点，也去掉
+
+    fStr.erase(fStr.find_last_not_of('0') + 1, string::npos);
+    if (fStr.back() == '.') fStr.pop_back();  // 如果末尾是点，也去掉
+
+    // 输出字符串
+    cout << "Double as string: " << dStr << '\n';
+    cout << "Float as string: " << fStr << '\n';
+
+    return 0;
+}
+```
+## string::erase例子
+```cpp
+#include <algorithm>
+#include <iostream>
+#include <iterator>
+#include <string>
+ 
+int main()
+{
+    std::string s = "This Is An Example";
+    std::cout << "1) " << s << '\n';
+ 
+    s.erase(7, 3); // erases " An" using overload (1)
+    std::cout << "2) " << s << '\n';
+ 
+    s.erase(std::find(s.begin(), s.end(), ' ')); // erases first ' '; overload (2)
+    std::cout << "3) " << s << '\n';
+ 
+    s.erase(s.find(' ')); // trims from ' ' to the end of the string; overload (1)
+    std::cout << "4) " << s << '\n';
+ 
+    auto it = std::next(s.begin(), s.find('s')); // obtains iterator to the first 's'
+    s.erase(it, std::next(it, 2)); // erases "sI"; overload (3)
+    std::cout << "5) " << s << '\n';
+}
+```
+## 数组比较
+```cpp
+#include <algorithm> // std::equal
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int arr1[] = { 1, 2, 3, 4, 5 };
+    int arr2[] = { 1, 2, 3, 4, 5 };
+    int size = 5;
+
+    if (std::equal(arr1, arr1 + size, arr2)) {
+        cout << "Arrays are equal!" << endl;
+    } else {
+        cout << "Arrays are not equal!" << endl;
+    }
+
+    return 0;
+}
+```
+## 虚函数调用崩溃问题
+基类发生更新，派生类所在动态库也需要同步编译更新，否则可能会出现莫名问题。
+## C++中在类定义内使用using来使用别名是否合适？
+在C++中，在类定义内使用`using`来创建别名是完全合适的，这通常用于增加代码的可读性、简化类型名称、提高代码的模块化以及增强代码的可维护性。
+
+以下是几个常见的场景，说明在类中使用`using`定义别名的优势：
+
+1. **简化复杂的类型声明**：有时在类中使用某些复杂的类型（如模板类型、容器类型），为这些类型定义别名可以使代码更清晰。例如：
+
+   ```cpp
+   #include <vector>
+   class MyClass {
+   public:
+       using IntVector = std::vector<int>;
+       
+       void addValue(int value) {
+           data.push_back(value);
+       }
+
+   private:
+       IntVector data;
+   };
+   ```
+
+   在这种情况下，`IntVector`是`std::vector<int>`的别名，使代码更简洁、可读。
+
+2. **增强可维护性**：当一个复杂类型（如容器或模板）需要在多个成员函数中使用时，通过别名可以更容易地维护代码。如果以后需要更改类型，只需修改别名定义而无需在类的每个使用点都修改。
+
+3. **嵌套类型的易用性**：在模板类中，嵌套类型（如迭代器、引用类型等）通常需要特定的作用域说明符。通过`using`声明可以使它们的使用更简洁：
+
+   ```cpp
+   template <typename T>
+   class MyContainer {
+   public:
+       using Iterator = typename std::vector<T>::iterator;
+       
+       Iterator begin() { return data.begin(); }
+       Iterator end() { return data.end(); }
+
+   private:
+       std::vector<T> data;
+   };
+   ```
+
+   这里，`Iterator`是`std::vector<T>::iterator`的别名，简化了代码书写。
+
+4. **提高通用性和灵活性**：在继承和模板编程中，`using`声明可以增加代码的灵活性。例如，在类的内部创建`using`别名可以让子类在继承时更方便地使用基类的类型定义。
+
+总体来说，在类定义内使用`using`是非常合适的，它有助于简化代码、提升可读性和维护性，尤其是在涉及复杂模板或嵌套类型的情况下。
+## C++中vector作为函数参数传递时，应使用`const vector<T>&`还是`vector<T>`？
+在C++中，将`vector`作为函数参数传递时，推荐使用`const vector<T>&`，除非你确实需要对该`vector`进行修改，或需要传递一个副本。以下是详细分析：
+
+1. **`const vector<T>&`（常量引用）**：
+   - 优点：避免了拷贝，提高了性能，尤其是当`vector`内容较大时。
+   - 使用场景：适用于只读访问`vector`内容的场景，因为`const`保证了函数内部无法修改原始的`vector`。
+   - 示例：
+     ```cpp
+     void processVector(const std::vector<int>& vec) {
+         // 只读访问 vec
+         for (int val : vec) {
+             // 处理 val
+         }
+     }
+     ```
+
+2. **`vector<T>`（按值传递）**：
+   - 优点：按值传递会创建一个副本，因此函数内部对`vector`的修改不会影响到原始数据。
+   - 缺点：创建副本可能比较耗费性能，尤其是当`vector`较大时。
+   - 使用场景：当确实需要对传入的`vector`进行修改并希望这些修改不会影响原始`vector`时，按值传递是合适的选择。
+   - 示例：
+     ```cpp
+     void modifyVector(std::vector<int> vec) {
+         vec.push_back(42);  // 仅影响副本
+         // 对 vec 的操作不会影响到原始 vector
+     }
+     ```
+
+### 总结
+一般情况下，建议使用`const vector<T>&`，除非确实需要修改传入的`vector`且不希望修改影响到原始数据，这时可以选择按值传递`vector<T>`。
+
+## 同参数的特化模板函数重载与非模板函数重载混用
+可以在同一个程序中同时使用模板特化和非模板重载，但要注意编译器的选择顺序和可能导致的歧义。C++编译器在决策时会优先考虑**非模板函数**，然后才考虑**模板特化**。因此，在模板特化和非模板重载同时存在的情况下，编译器会优先调用非模板函数，而不是模板特化。
+
+### 代码示例
+
+```cpp
+#include <iostream>
+using namespace std;
+
+template <typename T>
+void func(T val) {
+    cout << "General template: " << val << endl;
+}
+
+// 针对 int 类型的模板特化
+template <>
+void func<int>(int val) {
+    cout << "Specialized template for int: " << val << endl;
+}
+
+// 非模板函数，参数为 int 类型
+void func(int val) {
+    cout << "Non-template overload for int: " << val << endl;
+}
+
+int main() {
+    func(3.14);  // 调用通用模板
+    func(42);    // 调用非模板重载，而不是模板特化
+    return 0;
+}
+```
+
+### 运行结果
+```
+General template: 3.14
+Non-template overload for int: 42
+```
+
+在上面的代码中，`func(42)` 调用了非模板的 `int` 版本，而不是 `int` 类型的模板特化。这是因为编译器在选择时遵循以下顺序：
+1. 尝试匹配非模板重载函数。
+2. 如果没有匹配到非模板函数，再考虑模板特化。
+3. 若没有适用的特化，最终选择通用模板版本。
+
+### 注意事项
+1. **避免歧义**：在混用模板特化和非模板重载时，应清晰设计以避免混淆和意外调用。若非模板和模板特化行为不一致，可能导致难以调试的问题。
+2. **使用 `enable_if` 等条件限制**：如果必须在相同函数名中为不同类型提供特定实现，考虑使用 `std::enable_if` 等机制来精确控制不同函数的选择条件。
+
+## 将参数类型定义为 T&，模板类型推导确实可以保留 const 信息
+如果 `func` 的参数定义为 `T&`，那么模板类型推导会根据传入参数的类型来确定 `T`，并且会保留 `const` 信息。换句话说，如果传入的是 `const` 类型的引用，`T` 会被推导为 `const` 类型。
+
+例如：
+
+```cpp
+#include <iostream>
+using namespace std;
+
+template <typename T>
+void func(T& val)
+{
+    cout << "General template: " << val << endl;
+}
+
+// 针对 int 类型的模板特化
+template <>
+void func<int>(int& val)
+{
+    cout << "Specialized template for int: " << val << endl;
+}
+
+// 非模板函数，参数为 int 类型
+void func(int& val)
+{
+    cout << "Non-template overload for int: " << val << endl;
+}
+
+int main()
+{
+    double d = 3.14;
+    const int i = 42;
+    func(d);
+    func(i);
+    return 0;
+}
+```
+输出：
+General template: 3.14
+General template: 42
+
+## 循环体为单行的for/if是否应用花括号
+- CG没有提到
+- google C++规范要求两种都允许（不用花括号有一定限制）
+	- 不用花括号基于历史原因
+## 对于C++类的成员函数中调用的子函数，若该子函数未使用该类的成员函数和成员变量，则应该将该子函数的声明放在哪？
+在C++中，如果一个类的成员函数调用了某个子函数，而这个子函数并没有使用该类的成员变量或成员函数，那么将这个子函数声明为类的成员函数可能并不合适，以下是建议的做法：
+
+### 1. **将子函数声明为类的静态成员函数**
+如果这个子函数与类有逻辑关联，但不需要访问类的成员变量或成员函数，可以将其声明为类的**静态成员函数**。静态成员函数不依赖于类的实例，可以通过类名直接调用。
+
+```cpp
+class MyClass {
+public:
+    void doSomething() {
+        int result = helperFunction(5);
+        // ...
+    }
+
+private:
+    static int helperFunction(int x) {
+        return x * x;
+    }
+};
+```
+
+### 2. **将子函数定义为自由函数（非类成员函数）**
+如果这个子函数与类并没有很强的逻辑关联，只是一个工具函数，可以将其定义为**自由函数**，放在命名空间中。这种方式更符合单一职责原则，也使代码更清晰。
+
+```cpp
+namespace Utils {
+    int helperFunction(int x) {
+        return x * x;
+    }
+}
+
+class MyClass {
+public:
+    void doSomething() {
+        int result = Utils::helperFunction(5);
+        // ...
+    }
+};
+```
+
+### 3. **定义为匿名命名空间中的静态函数**
+如果子函数只在一个源文件中使用，且不需要被其他文件访问，可以将其定义为匿名命名空间中的静态函数。这种方式可以减少全局命名空间的污染。
+
+```cpp
+namespace {
+    int helperFunction(int x) {
+        return x * x;
+    }
+}
+
+class MyClass {
+public:
+    void doSomething() {
+        int result = helperFunction(5);
+        // ...
+    }
+};
+```
+
+### 选择标准
+- **逻辑关联性**：如果子函数与类密切相关，则选择静态成员函数；如果不相关，则考虑自由函数。
+- **访问范围**：如果子函数只用于当前文件，且无需被其他模块访问，匿名命名空间是较优选择。
+- **可读性和维护性**：自由函数的使用有助于分离逻辑，增加代码的可读性和模块化。
+
+通常，尽量避免将不需要访问类成员的函数声明为普通的成员函数，这样可以更好地体现设计意图并减少耦合性。
+
+## C++中，对于constexpr的长vector，应该在代码中填写其内容还是通过配置文件读取？
+在C++中，对于一个**长的 `constexpr` vector**，是直接在代码中定义其内容还是通过配置文件读取，取决于实际使用场景和权衡的因素。以下是两种方式的优缺点分析，供你参考：
+
+---
+
+### **方式 1：直接在代码中定义内容**
+```cpp
+constexpr std::array<int, 5> data = {1, 2, 3, 4, 5};
+```
+
+#### **优点**：
+1. **编译期常量**：
+   - 使用 `constexpr` 的数据会在编译期确定，生成的代码更加高效。
+   - 避免运行时解析配置文件的开销，适合性能敏感的场景。
+2. **安全性**：
+   - 数据直接内嵌到程序中，避免配置文件被篡改的风险。
+3. **易读性**：
+   - 数据的定义直接展示在代码中，开发和调试更直观。
+
+#### **缺点**：
+1. **可维护性差**：
+   - 如果数据很长或复杂，直接在代码中定义会显得冗长，降低代码可读性。
+   - 修改数据需要重新编译代码，不适合频繁更新。
+2. **数据规模限制**：
+   - `constexpr` 的数据存储在程序的常量区，可能会受到编译器和平台的限制（例如栈大小或静态初始化区域的大小）。
+   
+---
+
+### **方式 2：通过配置文件读取**
+```cpp
+std::vector<int> readConfig(const std::string& filepath) {
+    std::vector<int> data;
+    std::ifstream file(filepath);
+    int value;
+    while (file >> value) {
+        data.push_back(value);
+    }
+    return data;
+}
+```
+
+#### **优点**：
+1. **灵活性高**：
+   - 配置文件易于更新，不需要重新编译程序。
+   - 可以支持动态加载，适合需要经常调整或在运行时定制的场景。
+2. **分离数据和逻辑**：
+   - 配置文件将数据和代码分离，提高代码的清晰度和可维护性。
+
+#### **缺点**：
+1. **运行时开销**：
+   - 读取和解析配置文件会引入运行时开销。
+   - 需要处理文件路径和异常情况（如文件丢失或格式错误）。
+2. **依赖外部资源**：
+   - 配置文件是外部依赖，可能会因为文件损坏或丢失导致程序无法运行。
+
+---
+
+### **选择建议**
+#### **优先选择代码内定义（`constexpr`）的情况**：
+- 数据相对固定，不需要频繁更新。
+- 对性能要求高，或需要在编译期优化。
+- 数据规模适中，不至于让代码显得杂乱。
+- 对安全性要求高，不希望外部文件影响程序行为。
+
+#### **优先选择配置文件读取的情况**：
+- 数据量较大，或需要动态调整。
+- 项目需要高度灵活性。
+- 运行时加载的性能开销可以接受。
+- 数据更新频率高，不希望每次更新都重新编译。
+
+---
+
+### **混合使用的思路**
+1. **静态数据和动态数据结合**：
+   - 固定部分的数据可以直接在代码中用 `constexpr` 定义。
+   - 可变部分的数据通过配置文件或运行时加载。
+
+2. **工具自动生成代码**：
+   - 如果数据需要频繁调整，但仍希望保持编译期优化，可以考虑用脚本（如 Python）从配置文件生成 C++ 源文件，把数据直接嵌入代码中。
+
+例如：
+```cpp
+constexpr std::array<int, 5> data = {1, 2, 3, 4, 5};  // 自动生成
+```
+
+---
+
+### 结论
+- 如果数据是固定的，建议使用 `constexpr`。
+- 如果数据经常变动或需要灵活性，建议通过配置文件加载。
+- 具体选择还需根据项目的规模、需求和团队的习惯来决定。
+
+## str=str.substr(x)调优
+改成str.erase(0,x)
+性能有数量级提升
+
+## C++中什么时候函数应该返回值，什么时候应该返回const引用？
+在C++中，选择函数返回值类型（返回值还是返回`const`引用）主要取决于以下因素：
+
+### **1. 函数返回值类型**
+#### 适合返回值的场景：
+- **返回的是临时对象（本地变量）**  
+  如果函数内部创建了一个临时对象并返回，应该返回值，因为临时对象在函数结束时会销毁，返回引用会指向无效对象。  
+  ```cpp
+  std::string createString() {
+      return "Hello, World!";
+  }
+  ```
+- **需要返回的值较小，复制成本低**  
+  如果返回的对象较小（如内置类型或小型结构体），复制成本可以忽略不计，返回值是可接受的。  
+  ```cpp
+  int getNumber() {
+      return 42;
+  }
+  ```
+
+- **希望返回一个新的对象副本**  
+  如果调用者需要独立使用返回的对象副本而不希望与函数内的原对象共享数据，则返回值是适当的。  
+  ```cpp
+  std::vector<int> getVector() {
+      return {1, 2, 3, 4, 5};
+  }
+  ```
+
+---
+
+#### 适合返回`const`引用的场景：
+- **返回的是函数内部的常量对象或类成员**  
+  如果返回的对象是函数内的常量对象或类的成员，且调用者只需访问但不修改值时，可以返回`const`引用。  
+  ```cpp
+  class Config {
+  public:
+      const std::string& getName() const { return name; }
+  private:
+      std::string name = "default";
+  };
+  ```
+
+- **希望避免复制开销**  
+  对于较大的对象，复制可能成本较高，此时返回`const`引用可以节省性能开销。
+  ```cpp
+  const std::vector<int>& getLargeVector() const { return largeVector; }
+  ```
+
+- **明确只读访问**  
+  `const`引用传递明确告知调用者：返回的对象不能被修改，增强了代码的意图表达和安全性。
+
+---
+
+### **2. 注意事项**
+1. **不要返回局部变量的引用**  
+   局部变量在函数退出后会被销毁，返回引用将导致未定义行为：
+   ```cpp
+   const std::string& getTemporaryString() {
+       std::string temp = "Hello";
+       return temp; // 错误！返回局部变量的引用
+   }
+   ```
+
+2. **是否使用`const`引用取决于是否允许修改**  
+   如果返回值的引用不需要保护，可以直接返回非`const`引用；否则优先使用`const`引用。
+   ```cpp
+   std::string& getMutableName() { return name; }        // 调用者可以修改
+   const std::string& getImmutableName() const { return name; } // 调用者不可修改
+   ```
+
+3. **右值引用`&&`**  
+   如果函数的目的是转移对象的所有权（例如，在移动语义中），可以返回右值引用。  
+   ```cpp
+   std::unique_ptr<int> createUniqueInt() {
+       return std::make_unique<int>(42);
+   }
+   ```
+
+---
+
+### **总结：如何选择？**
+- 如果返回**本地临时对象**，或希望返回值副本：返回值。  
+- 如果返回**类成员或全局对象的引用**，并且希望节省开销：返回`const`引用。  
+- 如果对象需要被修改：返回非`const`引用。  
+- 如果涉及**转移所有权**：返回右值引用。  
+
+根据具体的使用场景权衡性能和安全性是关键！
+
+## 如果一个函数足够小，而且性能关键，把它设为内联
+`[CG] F.5`
+超过三行不应设为内联
+类内定义的成员函数是默认内联的
+
+## C++中一个类的成员函数需要返回该类的一个成员变量，该成员变量是个巨大的vector，那么这个成员函数应该怎么设计？
+在C++中，如果类的成员函数需要返回一个巨大的`std::vector`，设计这个函数时需要权衡性能和安全性。以下是几种实现方式以及它们的优缺点：
+
+---
+
+### **1. 返回值传递（值返回）**
+```cpp
+std::vector<int> getVector() const {
+    return myVector;
+}
+```
+#### **优点：**
+- 简洁、直观，调用者会获得`myVector`的一个副本。
+- 符合值语义的直觉。
+- C++11及以后的标准中，编译器会通过**返回值优化（RVO）**和**移动语义**降低复制开销。
+
+#### **缺点：**
+- 如果调用返回值优化失败或者移动构造不可用，会导致较高的拷贝开销，尤其对于巨大的`std::vector`。
+
+---
+
+### **2. 返回引用**
+```cpp
+const std::vector<int>& getVector() const {
+    return myVector;
+}
+```
+#### **优点：**
+- 避免了复制，性能更高。
+- 常量引用可以保护`myVector`，防止被调用者修改。
+
+#### **缺点：**
+- 调用者获得的是`myVector`的引用，修改`myVector`的生命周期时需谨慎，否则可能导致悬空引用。
+- 如果调用者需要一个独立的副本，必须手动复制：
+  ```cpp
+  std::vector<int> copy = obj.getVector();
+  ```
+
+---
+
+### **3. 返回指针（不推荐）**
+```cpp
+const std::vector<int>* getVector() const {
+    return &myVector;
+}
+```
+#### **优点：**
+- 和返回引用类似，避免了复制。
+- 在某些特定场景下可能需要指针（例如某些C风格的API）。
+
+#### **缺点：**
+- 易用性差，调用者必须解引用指针来访问数据。
+- 同样存在悬空指针风险。
+- 和现代C++的设计风格不符。
+
+---
+
+### **4. 通过参数传递（输出参数）**
+```cpp
+void getVector(std::vector<int>& outVector) const {
+    outVector = myVector;
+}
+```
+#### **优点：**
+- 显式地将复制控制权交给调用者。
+- 不涉及返回值优化的问题。
+- 提供了扩展接口的可能性（例如，过滤或转换数据）。
+
+#### **缺点：**
+- 不够直观，不符合现代C++的表达风格。
+- 调用者需要显式准备一个`std::vector`变量来接收结果。
+
+---
+
+### **推荐方式**
+根据具体需求选择：
+1. **如果性能不敏感**，或者调用者需要独立的副本：**返回值传递**。
+2. **如果性能敏感**，且调用者不需要修改：**返回`const`引用**。
+
+综合考虑，可以优先选择返回`const`引用的方式，具体实现如下：
+
+```cpp
+class MyClass {
+private:
+    std::vector<int> myVector;
+
+public:
+    // 返回常量引用
+    const std::vector<int>& getVector() const {
+        return myVector;
+    }
+
+    // 返回副本（可选实现）
+    std::vector<int> getVectorCopy() const {
+        return myVector;
+    }
+};
+```
+
+调用示例：
+
+```cpp
+MyClass obj;
+const std::vector<int>& refVec = obj.getVector();  // 高效，返回引用
+std::vector<int> copyVec = obj.getVectorCopy();    // 返回副本，调用者可修改
+```
+
+## unique_prt转shared_ptr
+```cpp
+#include <iostream>
+#include <memory>
+
+class MyClass {
+public:
+    void hello() { std::cout << "Hello, world!" << std::endl; }
+};
+
+int main()
+{
+    // 创建一个 unique_ptr
+    auto uniquePtr = std::make_unique<MyClass>();
+
+    // 使用 std::move 转换为 shared_ptr
+    std::shared_ptr sharedPtr { std::move(uniquePtr) };
+
+    // 现在可以通过 sharedPtr 使用对象
+    sharedPtr->hello();
+
+    // uniquePtr 被置为空，不能再使用它
+    if (!uniquePtr) {
+        std::cout << "uniquePtr is now null." << std::endl;
+    }
+
+    return 0;
+}
+```

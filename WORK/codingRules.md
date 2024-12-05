@@ -63,3 +63,6 @@ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rl-knr
 ## c++101编程规范
 
 https://killwing.github.io/c++-coding-standards.md.html
+
+## 函数默认传递指针用const修饰
+`[CG]Con.3`

@@ -137,3 +137,25 @@ https://blog.csdn.net/jiangyu1013/article/details/97630479
 
 ## git文件名大小写变更后，无法checkout
 按说明先删除名称变更的文件再检出
+
+## git各成员提交代码行数记录
+https://rzrobert.github.io/2017/02/04/git%E7%BB%9F%E8%AE%A1%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%90%84%E6%88%90%E5%91%98%E4%BB%A3%E7%A0%81%E9%87%8F/
+```sh
+git log --format='%aN' | sort -u | while read name; do echo -en "$name\t"; git log --author="$name" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -; done
+```
+按添加行数降序排列:
+```sh
+git log --format='%aN' | sort -u | while read name; do 
+    stats=$(git log --author="$name" --pretty=tformat: --numstat | 
+            awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s", add, subs, loc }');
+    add_lines=$(echo "$stats" | awk -F'[:,]' '{print $2}' | tr -d ' ');
+    echo -e "$add_lines\t$name\t$stats";
+done | sort -nr -k1,1 | cut -f2-
+```
+## git统计各成员代码提交次数
+```sh
+git log --oneline --pretty=format:"%an" | sort | uniq -c | sort -nr
+```
+```sh
+git log --oneline --pretty=format:"%an" | sort | uniq -c
+```
