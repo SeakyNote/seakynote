@@ -61,8 +61,9 @@
 * 招聘
   * [招聘初步研究](recruit/招聘初步研究.md)
   * 面试
-    * [技术问题](recruit/技术问题.md)
-    * [非技术问题](recruit/非技术问题.md)
+    * [技术问题（old）](recruit/技术问题（old）.md)
+    * [非技术问题（old）](recruit/非技术问题（old）.md)
+    * [开发能力考察](recruit/开发能力考察.md)
 * 爱情心理学
   * [课程](PsychologyOfLove/课程.md)
   * [爱情开张](PsychologyOfLove/爱情开张.md)
