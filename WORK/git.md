@@ -101,6 +101,7 @@ repository Settings，第三个勾
 ## git-lfs问题
 
 检出节点时直接报external filter git-lfs filter-process failed
+
 ```
 git lfs install --skip-smudge
 切换节点
@@ -109,6 +110,7 @@ git lfs install --force
 ```
 
 ## 合并时报fatal: You have not concluded your merge(MERGE_HEAD exists)
+
 ```
 $:git merge --abort
 $:git reset --merge
@@ -118,32 +120,41 @@ $:git pull
 ## 代码审查考虑用sourcetree
 
 ## git仓库文件大小写改名问题
-- windows平台下仅变更大小写不会触发git uncommit
-- 如果要仅变更大小写需要先删除后重新添加
+
+* windows平台下仅变更大小写不会触发git uncommit
+* 如果要仅变更大小写需要先删除后重新添加
 
 ## git lfs pull拉取失败
-- 可能有多个远端分支，其中某些没有对应文件
-- 需要指定remote
-	- 如git lfs pull origin
+
+* 可能有多个远端分支，其中某些没有对应文件
+* 需要指定remote
+  + 如git lfs pull origin
 
 ## Gitee 自已提交的代码提交人头像为他人、码云上独自开发的项目显示为 2 个开发者
+
 https://blog.csdn.net/jiangyu1013/article/details/97630479
 
 ## git设置对文件大小写敏感
+
 ```
 [core]
 	ignorecase = false
 ```
 
 ## git文件名大小写变更后，无法checkout
+
 按说明先删除名称变更的文件再检出
 
 ## git各成员提交代码行数记录
+
 https://rzrobert.github.io/2017/02/04/git%E7%BB%9F%E8%AE%A1%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%90%84%E6%88%90%E5%91%98%E4%BB%A3%E7%A0%81%E9%87%8F/
+
 ```sh
 git log --format='%aN' | sort -u | while read name; do echo -en "$name\t"; git log --author="$name" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -; done
 ```
+
 按添加行数降序排列:
+
 ```sh
 git log --format='%aN' | sort -u | while read name; do 
     stats=$(git log --author="$name" --pretty=tformat: --numstat | 
@@ -152,10 +163,26 @@ git log --format='%aN' | sort -u | while read name; do
     echo -e "$add_lines\t$name\t$stats";
 done | sort -nr -k1,1 | cut -f2-
 ```
+
 ## git统计各成员代码提交次数
+
 ```sh
 git log --oneline --pretty=format:"%an" | sort | uniq -c | sort -nr
 ```
+
 ```sh
 git log --oneline --pretty=format:"%an" | sort | uniq -c
+```
+
+## 自某个节点统计git仓库提交行数
+
+```sh
+START_COMMIT="e4ae6ee903887169c14fdcb9831f971d44e30fcd"
+
+git log $START_COMMIT..HEAD --format='%aN' | sort -u | while read name; do
+    stats=$(git log $START_COMMIT..HEAD --author="$name" --pretty=tformat: --numstat |
+            awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s", add, subs, loc }');
+    add_lines=$(echo "$stats" | awk -F'[:,]' '{print $2}' | tr -d ' ');
+    echo -e "$add_lines\t$name\t$stats";
+done | sort -nr -k1,1 | cut -f2-
 ```
