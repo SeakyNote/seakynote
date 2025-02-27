@@ -74,6 +74,7 @@ digraph template{
 ### 1. **明确测试目标与范围**
 
 #### 需要回答的问题：
+
 * 你要测试的是哪些功能？（按钮点击、菜单操作、表单输入、窗口导航等）
 * 是否需要进行UI布局测试或跨平台兼容性测试？
 
@@ -139,6 +140,7 @@ digraph template{
 ### 4. **编写脚本并运行**
 
 #### **步骤**：
+
 1. **录制与回放**：
    - 使用工具（如TestComplete、Selenium IDE）录制交互操作。
    - 回放测试，确保脚本运行正常。
@@ -316,6 +318,7 @@ assert window['ResultLabel'].window_text() == "Success", "Test Failed!"
 ### **推荐的选择**
 
 #### **企业级项目或复杂需求**：
+
 * 首选 **Squish**：专门针对 Qt 开发，深度支持复杂控件。
 * 备选 **TestComplete**：如果项目涉及多技术栈的混合测试。
 
@@ -380,7 +383,7 @@ def main():
 
 ```bash
      set QT_ACCESSIBILITY=1
-     ```
+```
 
    - 或在代码中手动启用：
 
@@ -388,7 +391,7 @@ def main():
 
 ```cpp
      QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-     ```
+```
 
 ### **检查 Accessibility 状态**
 
@@ -403,6 +406,7 @@ def main():
 ### **基本操作**
 
 #### **识别窗口**
+
 通过 Pywinauto 获取目标窗口的句柄：
 
 ```python
@@ -451,6 +455,7 @@ window = app.window(title="Main Window Title")
 ### **复杂操作**
 
 #### **动态控件识别**
+
 如果控件名称不固定，可以通过控件属性进行筛选：
 
 ```python

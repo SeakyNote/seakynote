@@ -343,7 +343,7 @@ https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/head
         sp->show(); // 使用重载的 -> 运算符来调用 Test::show()
         return 0;
     }
-    ```
+```
 
 3. **工作原理**：
     - 在上述示例中，`SmartPointer` 类封装了一个指向类型 `T` 的指针 `ptr`。
@@ -439,7 +439,7 @@ int main() {
              // 这可能会做任何事情，因为 myBool 的值是未定义的
          }
      }
-     ```
+ ```
 
 2. **全局变量或静态变量：**
    - 如果 `bool` 变量是在全局作用域（函数外部）或是 `static` 关键字修饰的，那么它将被自动初始化为 `false` 。
@@ -453,7 +453,7 @@ int main() {
      void foo() {
          static bool myBoolStatic;  // 自动初始化为 false
      }
-     ```
+```
 
 总结来说：
 * **局部变量**（函数内部声明的）：不会自动初始化，需要你显式地赋值。
@@ -1491,7 +1491,7 @@ int main()
              // 处理 val
          }
      }
-     ```
+```
 
 2. **`vector<T>`（按值传递）**：
    - 优点：按值传递会创建一个副本，因此函数内部对 `vector` 的修改不会影响到原始数据。
@@ -1506,7 +1506,7 @@ int main()
          vec.push_back(42);  // 仅影响副本
          // 对 vec 的操作不会影响到原始 vector
      }
-     ```
+```
 
 ### 总结
 
