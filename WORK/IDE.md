@@ -99,7 +99,7 @@ https://www.coder.work/article/7770501
 
 help-about-关闭clangCodeModel
 
-## 解决VSC中使用Unity插件时“download the .NET Runtime.”的问题
+## 解决VSC中使用Unity插件时“download the . NET Runtime.”的问题
 
 https://zhuanlan.zhihu.com/p/660879053
 
@@ -143,21 +143,39 @@ https://blog.csdn.net/qq_21237549/article/details/137559757
 找status bar visibility
 
 ## vscode clang-format格式化头文件顺序不对
-- vscode设置中editor: Default Formatter设置不正确
-- 或者尝试代码文件tab内右键Format Document With...
-	- Configure Default Formatter...
-- 与C_Cpp: Formatting无关
+
+* vscode设置中editor: Default Formatter设置不正确
+* 或者尝试代码文件tab内右键Format Document With...
+  + Configure Default Formatter...
+* 与C_Cpp: Formatting无关
 
 ## vs2022添加类
-- 解决方案管理器
-- 选中节点
-- 右键添加-新建项
+
+* 解决方案管理器
+* 选中节点
+* 右键添加-新建项
 
 ## msvc C++版本显示错误
+
 编译增加 `/Zc:__cplusplus`
 
 ## 正则表达式替换空行
+
 ^\s*\n
 
 ## vs2022高级保存选项开启
+
 https://blog.csdn.net/weixin_44335538/article/details/125263750
+
+## vscode因C++版本造成的红色波浪线
+
+**配置IntelliSense的C++标准**
+* **打开命令面板**：`Ctrl+Shift+P`（Windows/Linux）或 `Cmd+Shift+P`（macOS）。
+* **输入并选择**：`C/C++: Edit Configurations (UI)`。
+* **设置C++标准**：
+  + 在 **`C++ Standard`** 下拉菜单中选择项目所需的版本（如 `C++17` 或 `C++20`）。
+* **保存配置**：更改后会自动更新到 `.vscode/c_cpp_properties.json`。
+
+## vscode格式化设置
+
+Editor: Default Formatter
