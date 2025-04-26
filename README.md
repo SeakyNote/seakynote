@@ -1,6 +1,3 @@
-
-
-
 > Seaky的笔记
 
 [《人月神话》](MMM/人月神话.md)
@@ -25,8 +22,8 @@
 
 [《娱乐至死》](AmusingOurselvesToDeath/娱乐至死.md)
 
+[《只有偏执狂才能生存》](OnlyTheParanoidSurvive/只有偏执狂才能生存.md)
+
 [装机](computer/装机.md)
 
 [linux经验](Linux/experience.md)
-
-
