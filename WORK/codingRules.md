@@ -71,3 +71,6 @@ https://killwing.github.io/c++-coding-standards.md.html
 ## 魔数/魔法字符串
 
 ES.45: Avoid “magic constants”; use symbolic constants
+
+## 不要用C风格转换
+ES.49: If you must use a cast, use a named cast
