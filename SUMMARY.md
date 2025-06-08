@@ -97,7 +97,8 @@
   + 面试
     - [技术问题（old）](recruit/技术问题（old）.md)
     - [非技术问题（old）](recruit/非技术问题（old）.md)
-    - [开发能力考察](recruit/开发能力考察.md)
+    - [开发能力考察（old）](recruit/开发能力考察（old）.md)
+    - [社招面试问题（Qt）](recruit/社招面试问题（Qt）.md)
 * 爱情心理学
   + [课程](PsychologyOfLove/课程.md)
   + [爱情开张](PsychologyOfLove/爱情开张.md)
