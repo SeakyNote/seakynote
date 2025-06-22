@@ -374,7 +374,7 @@ def main():
 
 ```bash
    pip install pywinauto
-   ```
+```
 
 3. 确保你的 Qt 应用启用了 **Accessibility** 支持（Qt 默认开启）。
    - 可以通过命令行设置：
@@ -426,21 +426,21 @@ window = app.window(title="Main Window Title")
 
 ```python
    window.Button.click()
-   ```
+```
 
 2. **输入文本**：
    
 
 ```python
    window.TextBox.type_keys("Hello, World!")
-   ```
+```
 
 3. **选择菜单项**：
    
 
 ```python
    window.menu_select("File->Open")
-   ```
+```
 
 4. **读取控件属性**：
    
@@ -448,7 +448,7 @@ window = app.window(title="Main Window Title")
 ```python
    label_text = window.Label.window_text()
    print(label_text)
-   ```
+```
 
 ---
 

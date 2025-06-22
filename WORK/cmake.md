@@ -6,8 +6,8 @@ cmake_minimum_required 最低版本要求
 
 project，形如
 
-- project(test_KevinCmake VERSION 0.1.0)
-- project(SeakyEmoji LANGUAGES CXX)
+* project(test_KevinCmake VERSION 0.1.0)
+* project(SeakyEmoji LANGUAGES CXX)
 
 启用测试功能
 
@@ -118,13 +118,13 @@ set_target_properties(XXXProject PROPERTIES DEBUG_POSTFIX "d")
 
 ## msvc编译器 cmake编译优化级别设置
 
-- /O1 基本优化
-- /O2 默认优化
-- /Ox 启用所有优化
-- /ObN 控制函数内联程度
-- /Od 禁用所有优化
+* /O1 基本优化
+* /O2 默认优化
+* /Ox 启用所有优化
+* /ObN 控制函数内联程度
+* /Od 禁用所有优化
 
-例子：`target_compile_options(MyExecutable PRIVATE /O2)`
+例子： `target_compile_options(MyExecutable PRIVATE /O2)`
 
 ## cmake未生成lib文件的原因
 
@@ -132,7 +132,7 @@ https://blog.csdn.net/weixin_32155265/article/details/128054373
 
 ## AutoUic error
 
-`set(CMAKE_AUTOUIC_SEARCH_PATHS "src/Forms")`
+ `set(CMAKE_AUTOUIC_SEARCH_PATHS "src/Forms")`
 
 https://www.cnblogs.com/dbai/p/17249494.html
 
@@ -152,72 +152,86 @@ cmake未将头文件加入源码
 
 遍历添加的问题
 
-- 可能有些文件放在那但不需要编译的场景
-- 可能会遍历到不想编译的文件
-  - 比如build目录
-- 据说华为也是逐个添加的
+* 可能有些文件放在那但不需要编译的场景
+* 可能会遍历到不想编译的文件
+  + 比如build目录
+* 据说华为也是逐个添加的
 
 ## 在cmake中，对于target_link_libraries函数，public和private有什么区别？
 
-在CMake中，`target_link_libraries`函数用于将库链接到目标上，并指定该链接的属性。这个函数有三个关键字：`PUBLIC`、`PRIVATE`和`INTERFACE`。它们定义了链接库的使用范围和传播方式。
+在CMake中， `target_link_libraries` 函数用于将库链接到目标上，并指定该链接的属性。这个函数有三个关键字： `PUBLIC` 、 `PRIVATE` 和 `INTERFACE` 。它们定义了链接库的使用范围和传播方式。
 
 ### 关键字解释
 
 1. **PRIVATE**
-   - 当你使用`PRIVATE`关键字时，链接库只对当前目标可见。这意味着其他链接到该目标的目标不会继承这些链接库。
+   - 当你使用 `PRIVATE` 关键字时，链接库只对当前目标可见。这意味着其他链接到该目标的目标不会继承这些链接库。
    - 用法示例：
-     ```cmake
-     target_link_libraries(my_target PRIVATE some_library)
-     ```
-     在这个例子中，`some_library`只对`my_target`可见，不会传递给任何链接到`my_target`的其他目标。
+
+```cmake
+target_link_libraries(my_target PRIVATE some_library)
+```
+
+在这个例子中， `some_library` 只对 `my_target` 可见，不会传递给任何链接到 `my_target` 的其他目标。
 
 2. **PUBLIC**
-   - 当你使用`PUBLIC`关键字时，链接库对当前目标和所有链接到该目标的目标可见。这意味着它们会传播到依赖于当前目标的所有其他目标。
+   - 当你使用 `PUBLIC` 关键字时，链接库对当前目标和所有链接到该目标的目标可见。这意味着它们会传播到依赖于当前目标的所有其他目标。
    - 用法示例：
-     ```cmake
-     target_link_libraries(my_target PUBLIC some_library)
-     ```
-     在这个例子中，`some_library`对`my_target`可见，并且任何链接到`my_target`的目标也会看到并链接`some_library`。
+
+```cmake
+target_link_libraries(my_target PUBLIC some_library)
+```
+
+在这个例子中， `some_library` 对 `my_target` 可见，并且任何链接到 `my_target` 的目标也会看到并链接 `some_library` 。
 
 3. **INTERFACE**
-   - 当你使用`INTERFACE`关键字时，链接库只对链接到当前目标的目标可见，而当前目标本身不会链接这些库。通常用于接口库。
+   - 当你使用 `INTERFACE` 关键字时，链接库只对链接到当前目标的目标可见，而当前目标本身不会链接这些库。通常用于接口库。
    - 用法示例：
-     ```cmake
-     target_link_libraries(my_target INTERFACE some_library)
-     ```
-     在这个例子中，`some_library`不会链接到`my_target`，但是任何链接到`my_target`的目标都会看到并链接`some_library`。
+
+```cmake
+target_link_libraries(my_target INTERFACE some_library)
+```
+
+在这个例子中， `some_library` 不会链接到 `my_target` ，但是任何链接到 `my_target` 的目标都会看到并链接 `some_library` 。
 
 ### 应用场景举例
 
-假设你有三个目标：`libA`、`libB` 和 `app`，且依赖关系如下：
+假设你有三个目标： `libA` 、 `libB` 和 `app` ，且依赖关系如下：
 
-- `libA` 依赖于 `some_library`
-- `libB` 依赖于 `libA`
-- `app` 依赖于 `libB`
+* `libA` 依赖于 `some_library`
+* `libB` 依赖于 `libA`
+* `app` 依赖于 `libB`
 
 1. **使用 `PRIVATE`**：
-   ```cmake
-   target_link_libraries(libA PRIVATE some_library)
-   ```
-   这种情况下，`libB` 和 `app` 都不会看到 `some_library`，只有 `libA` 会链接 `some_library`。
+   
+
+```cmake
+target_link_libraries(libA PRIVATE some_library)
+```
+
+这种情况下， `libB` 和 `app` 都不会看到 `some_library` ，只有 `libA` 会链接 `some_library` 。
 
 2. **使用 `PUBLIC`**：
-   ```cmake
-   target_link_libraries(libA PUBLIC some_library)
-   ```
-   这种情况下，`libB` 会看到并链接 `some_library`，而 `app` 也会通过 `libB` 继承到 `some_library`。
+
+```cmake
+target_link_libraries(libA PUBLIC some_library)
+```
+
+这种情况下， `libB` 会看到并链接 `some_library` ，而 `app` 也会通过 `libB` 继承到 `some_library` 。
 
 3. **使用 `INTERFACE`**：
-   ```cmake
-   target_link_libraries(libA INTERFACE some_library)
-   ```
-   这种情况下，`libA` 本身不会链接 `some_library`，但 `libB` 和 `app` 都会看到并链接 `some_library`。
+   
+
+```cmake
+target_link_libraries(libA INTERFACE some_library)
+```
+
+这种情况下， `libA` 本身不会链接 `some_library` ，但 `libB` 和 `app` 都会看到并链接 `some_library` 。
 
 ### 总结
 
-- **PRIVATE**：链接库仅对当前目标可见，不会传播。
-- **PUBLIC**：链接库对当前目标和依赖当前目标的所有目标可见，并传播。
-- **INTERFACE**：链接库对依赖当前目标的所有目标可见，但不链接到当前目标。
+* **PRIVATE**：链接库仅对当前目标可见，不会传播。
+* **PUBLIC**：链接库对当前目标和依赖当前目标的所有目标可见，并传播。
+* **INTERFACE**：链接库对依赖当前目标的所有目标可见，但不链接到当前目标。
 
 选择适当的关键字有助于控制库的可见性和依赖性，确保项目构建的正确性和效率。
 
@@ -232,10 +246,12 @@ https://gitee.com/bigearrabbit/kevin_ctest
 https://www.jetbrains.com/lp/devecosystem-2022/cpp/#Which-unit-testing-frameworks-do-you-regularly-use
 
 ## cmake install
+
 https://gitee.com/bigearrabbit/KevinCmake/tree/master/cmake_install
 
 https://www.bilibili.com/video/BV1Ep421Q7Rt
 
 ## 调整警告级别
+
 https://cmake.org/cmake/help/latest/command/add_compile_options.html
-`add_compile_options(/W4)`
+ `add_compile_options(/W4)`
