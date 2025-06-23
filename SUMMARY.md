@@ -94,6 +94,7 @@
   + [17.味道与启发](CleanCode/17.味道与启发.md)
 * 招聘
   + [招聘初步研究](recruit/招聘初步研究.md)
+  + [校招招聘经验](recruit/校招招聘经验.md)
   + 面试
     - [技术问题（old）](recruit/技术问题（old）.md)
     - [非技术问题（old）](recruit/非技术问题（old）.md)
