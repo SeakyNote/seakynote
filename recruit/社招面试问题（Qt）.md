@@ -309,6 +309,31 @@ void CAMWeldlineCreateDlg::connectAutoCalcSigalSlots() const
 }
 ```
 
+3. 代码比较2
+
+```cpp
+以下两段C++代码哪一段更好：
+1.
+    if (const auto it = std::find_if(
+            pairs.begin(), pairs.end(),
+            [&stdPairName](const auto& pair) { return pair->get_name() == stdPairName; });
+        it != pairs.end())
+    {
+        weldline->set_pairing(*it);
+        weldline->set_group((*it)->get_parent());
+    }
+2.
+    for (const auto& pair : pairs)
+    {
+        if (pair->get_name() == stdPairName)
+        {
+            weldline->set_pairing(pair);
+            weldline->set_group(pair->get_parent());
+            break;
+        }
+    }
+```
+
 ## 自我评估/学习能力/成长潜力
 
 * 评价一下自己编程水平/C++编程基本功

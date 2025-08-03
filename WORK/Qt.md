@@ -1298,3 +1298,181 @@ public:
 | **规范建议**  | **遵循团队或项目约定，保持一致性**  |
 
 通过合理使用 `emit` ，可以使Qt代码更易于维护和理解，尤其是在多人协作项目中。
+
+## Qt对话框打开时移除焦点
+
+重写showEvent，增加setFocus激活自身
+
+## QString传参测试
+
+```cpp
+#include <iostream>
+#include <QString>         // QCoreApplication for QString initialization
+#include <QCoreApplication> // QCoreApplication for QString functionality
+#include <chrono>          // For high-resolution timing
+#include <string>          // For std::string conversion (optional)
+#include <iomanip>
+
+// 全局 volatile 变量，用于防止编译器将对参数的使用优化掉
+// 通过将字符串长度赋值给它，确保s.length()被调用，且结果不被优化掉
+volatile int dummy_length_sink = 0;
+
+// 函数1: 按值传递 QString
+void funcByValue(QString s) {
+    // 访问字符串的长度，确保s被“使用”了，防止编译器优化掉整个函数调用
+    // 将结果赋值给volatile变量，进一步阻止优化
+    dummy_length_sink = s.length();
+}
+
+// 函数2: 按const引用传递 QString
+void funcByReference(const QString& s) {
+    // 访问字符串的长度，确保s被“使用”了，防止编译器优化掉整个函数调用
+    // 将结果赋值给volatile变量，进一步阻止优化
+    dummy_length_sink = s.length();
+}
+
+// 测量函数执行时间的通用模板
+template <typename Func>
+long long measureExecutionTime(Func func, const QString& testString, long long iterations) {
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for (long long i = 0; i < iterations; ++i) {
+        func(testString);
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+}
+
+int main(int argc, char *argv[]) {
+    // QCoreApplication是Qt应用程序的基础，确保QString等Qt类正常工作
+    QCoreApplication a(argc, argv);
+
+    long long numIterations = 10000000; // 1000万次迭代，以获得可测量的结果
+
+    std::cout << "--- QString Parameter Passing Efficiency Test ---" << std::endl;
+    std::cout << "Number of iterations per test: " << numIterations << std::endl << std::endl;
+
+    // --- 测试短字符串 ---
+    QString shortString = "Hello, world!";
+    std::cout << "Testing with a short string (length: " << shortString.length() << "):" << std::endl;
+
+    // 测试按值传递
+    long long timeByValueShort = measureExecutionTime(
+        [](const QString& s){ funcByValue(s); }, // Lambda wrapper to pass QString by const ref to measureExecutionTime
+        shortString,
+        numIterations
+        );
+    std::cout << "  By Value (short string):      " << timeByValueShort << " ns" << std::endl;
+
+    // 测试按引用传递
+    long long timeByReferenceShort = measureExecutionTime(
+        [](const QString& s){ funcByReference(s); }, // Lambda wrapper
+        shortString,
+        numIterations
+        );
+    std::cout << "  By Const Reference (short string): " << timeByReferenceShort << " ns" << std::endl;
+    std::cout << std::endl;
+
+    // --- 测试长字符串 ---
+    // 创建一个包含10000个字符的长字符串
+    QString longString(10000, 'A');
+    std::cout << "Testing with a long string (length: " << longString.length() << "):" << std::endl;
+
+    // 测试按值传递
+    long long timeByValueLong = measureExecutionTime(
+        [](const QString& s){ funcByValue(s); },
+        longString,
+        numIterations
+        );
+    std::cout << "  By Value (long string):       " << timeByValueLong << " ns" << std::endl;
+
+    // 测试按引用传递
+    long long timeByReferenceLong = measureExecutionTime(
+        [](const QString& s){ funcByReference(s); },
+        longString,
+        numIterations
+        );
+    std::cout << "  By Const Reference (long string):  " << timeByReferenceLong << " ns" << std::endl;
+    std::cout << std::endl;
+
+    // 总结
+    std::cout << "--- Summary ---" << std::endl;
+    if (timeByValueShort > 0) {
+        double ratioShort = static_cast<double>(timeByValueShort) / timeByReferenceShort;
+        std::cout << "Short string: By value is " << std::fixed << std::setprecision(2) << ratioShort << "x slower than by const reference." << std::endl;
+    }
+    if (timeByValueLong > 0) {
+        double ratioLong = static_cast<double>(timeByValueLong) / timeByReferenceLong;
+        std::cout << "Long string: By value is " << std::fixed << std::setprecision(2) << ratioLong << "x slower than by const reference." << std::endl;
+    }
+
+    // 对于这种简单的控制台程序，不需要 QApplication 的事件循环
+    // return a.exec();
+    return 0;
+}
+```
+
+```cpp
+#include <QString>
+#include <QElapsedTimer>
+#include <iostream>
+
+// 测试函数1：直接传递QString
+void testByValue(QString str) {
+    // 防止优化
+    volatile int dummy = str.length();
+    (void)dummy;
+}
+
+// 测试函数2：传递const QString引用
+void testByReference(const QString& str) {
+    // 防止优化
+    volatile int dummy = str.length();
+    (void)dummy;
+}
+
+// 测试函数3：传递QString右值引用
+void testByRvalueReference(QString&& str) {
+    // 防止优化
+    volatile int dummy = str.length();
+    (void)dummy;
+}
+
+int main() {
+    const int iterations = 1000000;
+    QString testString = "This is a test string that is long enough to avoid SSO (Small String Optimization)";
+
+    // 测试直接传递QString
+    QElapsedTimer timer;
+    timer.start();
+    for (int i = 0; i < iterations; ++i) {
+        testByValue(testString);
+    }
+    qint64 byValueTime = timer.elapsed();
+
+    // 测试传递const QString引用
+    timer.restart();
+    for (int i = 0; i < iterations; ++i) {
+        testByReference(testString);
+    }
+    qint64 byReferenceTime = timer.elapsed();
+
+    // 测试传递QString右值引用
+    timer.restart();
+    for (int i = 0; i < iterations; ++i) {
+        testByRvalueReference(QString(testString)); // 创建临时对象
+    }
+    qint64 byRvalueReferenceTime = timer.elapsed();
+
+    // 输出结果
+    std::cout << "Test results (iterations: " << iterations << "):\n";
+    std::cout << "By value: " << byValueTime << " ms\n";
+    std::cout << "By const reference: " << byReferenceTime << " ms\n";
+    std::cout << "By rvalue reference: " << byRvalueReferenceTime << " ms\n";
+    std::cout << "Difference (value - reference): " << (byValueTime - byReferenceTime) << " ms\n";
+
+    return 0;
+}
+
+```
