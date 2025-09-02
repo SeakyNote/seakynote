@@ -24,6 +24,8 @@
 
 [《只有偏执狂才能生存》](OnlyTheParanoidSurvive/只有偏执狂才能生存.md)
 
+[《C++ Core Guidelines》](CppCoreGuidelines/CppCoreGuidelines.md)
+
 [装机](computer/装机.md)
 
 [linux经验](Linux/experience.md)

@@ -10,6 +10,7 @@
 * [《反脆弱》](ANTIFRAGILE/反脆弱.md)
 * [《娱乐至死》](AmusingOurselvesToDeath/娱乐至死.md)
 * [《只有偏执狂才能生存》](OnlyTheParanoidSurvive/只有偏执狂才能生存.md)
+* [《C++ Core Guidelines》](CppCoreGuidelines/CppCoreGuidelines.md)
 * [装机](computer/装机.md)
 * [linux经验](Linux/experience.md)
 * 《学会提问》
