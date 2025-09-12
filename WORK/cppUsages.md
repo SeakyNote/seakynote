@@ -2182,7 +2182,7 @@ enum class Color {
 #### 🛠️ **适用场景**  
 
 * 当参数是**只读的**且不需要移动语义时。
-* 当处理内置类型（如 `int`,                                           `double`）或**小型对象**时（传值可能更高效，但 `const T&` 仍可接受）。
+* 当处理内置类型（如 `int`,                                            `double`）或**小型对象**时（传值可能更高效，但 `const T&` 仍可接受）。
 * 当需要**代码简洁性**和**可读性**时（避免万能引用的复杂规则）。
 
 #### 🌰 示例  
@@ -2249,7 +2249,7 @@ int main() {
 
 * 参数**仅用于读取**，无需转发或修改。
 * 需要代码简洁性，避免万能引用的复杂规则。
-* 处理内置类型或小型对象（如 `int`,                                           `double`）。
+* 处理内置类型或小型对象（如 `int`,                                            `double`）。
 
 #### ✅ **优先选择 `T&&` 的情况**  
 
@@ -2350,6 +2350,7 @@ void process(const T& input) {
 * **含义**：
   + 指针本身是常量（不能修改指针的地址），但指向的对象可修改。
   + 例如：
+
     
 
 ```cpp
@@ -2366,6 +2367,7 @@ void process(const T& input) {
 * **含义**：
   + 指针本身可变（可以修改地址），但指向的对象是常量。
   + 例如：
+
     
 
 ```cpp
@@ -4617,7 +4619,7 @@ This is not harmful and does not fall under this guideline because it does not e
     }
 ```
 
-*   **访问权限:** **可以访问类的 `public`,                                    `protected`, 和 `private` 成员**。它被视为类的“朋友”，绕过了正常的访问控制。
+*   **访问权限:** **可以访问类的 `public`,                                     `protected`, 和 `private` 成员**。它被视为类的“朋友”，绕过了正常的访问控制。
 *   **与类的耦合:** 耦合度较高。这个函数直接依赖于类的内部实现细节（私有成员）。如果类的私有成员发生变化，友元函数很可能也需要修改。
 *   **优点:**
     -   可以直接访问私有成员，无需额外的公共 getter 函数。
@@ -4703,6 +4705,7 @@ void anotherFunctionInFile1() {
     -   **如何被其他 `.cpp` 文件调用:** **无法通过名称直接调用**。该函数的名称不会被导出到符号表中供其他 `.cpp` 文件使用。
     -   **优势:** **完全避免了名称冲突**。由于函数名称仅限于当前 `.cpp` 文件内部使用，不会与程序中其他地方（其他 `.cpp` 文件或库）的同名函数发生冲突。
     -   **用途:** 主要用于定义只供当前 `.cpp` 文件内部使用的辅助函数、工具函数或数据。这是现代 C++ 中取代文件作用域 `static` 关键字（用于函数和全局/静态变量）的标准做法。
+
     
 
 ```cpp
@@ -4933,6 +4936,7 @@ void anotherFunction() {
 ### 最佳实践
 
 *   **函数声明放在头文件中，函数定义放在 `.cpp` 文件中。** 这是最常见的做法，可以有效避免 ODR 问题。
+
     
 
 ```cpp
@@ -5788,3 +5792,284 @@ children->erase(std::remove_if(children->begin(), children->end(),[](const auto&
 ```
 
 erase-remove_if
+
+## 模板成员函数及其实例化/成员函数指针作为模板参数传递
+
+header
+
+```cpp
+    template <typename T, const int& (T::*OrderFunc)() const>
+    bool compareOrderGeneric(const T* left, const T* right) const;
+
+    bool comparePathOrder(const Path* left, const Path* right) const;
+
+    bool compareWeldlineOrder(const Weldline* left, const Weldline* right) const;
+```
+
+cpp
+
+```cpp
+template <typename T, const int& (T::*OrderFunc)() const>
+bool PlanningScene::compareOrderGeneric(const T* left, const T* right) const
+{
+    if (left->get_workpiece()->get_order() != right->get_workpiece()->get_order())
+    {
+        return left->get_workpiece()->get_order() < right->get_workpiece()->get_order();
+    }
+
+    const auto leftGroups = _groups->getRootGroupToCurrentGroup(left->get_group().get());
+    const auto rightGroups = _groups->getRootGroupToCurrentGroup(right->get_group().get());
+    for (size_t i = 0; i < leftGroups.size() && i < rightGroups.size(); ++i)
+    {
+        if (leftGroups[i]->get_order() != rightGroups[i]->get_order())
+        {
+            return leftGroups[i]->get_order() < rightGroups[i]->get_order();
+        }
+    }
+
+    if (left->get_pairing()->get_order() != right->get_pairing()->get_order())
+    {
+        return left->get_pairing()->get_order() < right->get_pairing()->get_order();
+    }
+
+    if ((left->*OrderFunc)() != (right->*OrderFunc)())
+    {
+        return (left->*OrderFunc)() < (right->*OrderFunc)();
+    }
+
+    return left->get_name() < right->get_name();
+}
+
+template bool PlanningScene::compareOrderGeneric<Path, &Path::get_processOrder>(const Path*,
+                                                                                const Path*) const;
+template bool
+    PlanningScene::compareOrderGeneric<Weldline, &Weldline::get_weldOrder>(const Weldline*,
+                                                                           const Weldline*) const;
+
+bool PlanningScene::comparePathOrder(const Path* left, const Path* right) const
+{
+    return compareOrderGeneric<Path, &Path::get_processOrder>(left, right);
+}
+
+bool PlanningScene::compareWeldlineOrder(const Weldline* left, const Weldline* right) const
+{
+    return compareOrderGeneric<Weldline, &Weldline::get_weldOrder>(left, right);
+}
+```
+
+## SF.22: Use an unnamed (anonymous) namespace for all internal/non-exported entities
+
+Q:
+如何理解C++ Core Guidelines中的"SF.22: Use an unnamed (anonymous) namespace for all internal/non-exported entities"，在cpp文件中定义的全局命名空间下const变量已经具有了内部链接性，还需要放到匿名命名空间下吗？
+A:
+这是一个非常好的问题，它涉及到 C++ 中链接性、命名空间以及 Core Guidelines 的意图。
+
+首先，我们来理解一下 SF.22 的核心思想：
+
+**SF.22: Use an unnamed (anonymous) namespace for all internal/non-exported entities**
+
+这条建议的目的是为了 **强制隔离** C++ 文件中的内部（非导出）实体。换句话说，它提倡将那些只在该 `.cpp` 文件内部使用，不应该被其他 `.cpp` 文件直接访问的变量、函数、类等，都放在一个匿名命名空间中。
+
+**为什么需要匿名命名空间？**
+
+1.  **避免命名冲突:** 当你有很多 `.cpp` 文件，并且每个文件都定义了同名的全局变量或函数时，如果没有匿名命名空间，链接器可能会遇到问题，或者导致意外的行为（例如，一个 `.cpp` 文件中的全局变量被另一个 `.cpp` 文件中的同名全局变量“覆盖”）。匿名命名空间为每个 `.cpp` 文件提供了一个独立的“作用域”，即使你在多个文件中定义了相同的名称，它们也不会相互干扰。
+2.  **明确表达意图:** 将实体放入匿名命名空间，明确地告诉其他开发者（以及编译器），这些实体是内部的，不打算被外部访问。这是一种代码的可读性和维护性的提升。
+3.  **更好的封装:** 匿名命名空间提供了一种比 `static` 关键字更现代、更灵活的封装方式。虽然 `static` 关键字也可以限制全局实体的链接性，但匿名命名空间可以包含更复杂的实体，如类、结构体、别名等。
+
+**关于在 C++ 文件中定义的全局命名空间下的 `const` 变量的链接性**
+
+你说的没错，在 C++ 中，在 `.cpp` 文件（即实现文件）的全局命名空间下定义的 `const` 变量，**默认情况下已经具有内部链接性**。 这通常是通过编译器在链接时进行的优化来实现的，它们不会被导出到其他翻译单元。
+
+例如：
+
+```cpp
+// my_file.cpp
+
+const int INTERNAL_VALUE = 10; // 默认具有内部链接性
+
+void some_function() {
+    // ... 使用 INTERNAL_VALUE ...
+}
+```
+
+在这个例子中， `INTERNAL_VALUE` 默认是“内部的”。
+
+**那么，为什么 Core Guidelines still 建议将它们放到匿名命名空间下？**
+
+尽管 `const` 变量在全局命名空间下默认具有内部链接性，Core Guidelines 仍然建议将其放入匿名命名空间，这主要是出于以下几点更深层次的考虑：
+
+1.  **一致性和明确性 (Consistency and Explicitness):**
+    -   **一致性:** Core Guidelines 的一个重要目标是提供一套统一、清晰的编码风格和最佳实践。将所有内部实体都放入匿名命名空间，可以形成一种统一的模式，让开发者在看到任何内部实体时，都能立即识别其“内部”属性。
+    -   **明确性:** 即使编译器已经处理了 `const` 变量的链接性，将它们放入匿名命名空间是一种 **显式** 的声明。它更清楚地表达了“这个变量只属于这个 `.cpp` 文件”的意图。这比依赖于编译器默认行为（即使是标准行为）更具可读性。
+
+2.  **未来可扩展性 (Future Extensibility):**
+    -   如果你的 `const` 变量后来需要变成一个非 `const` 变量（例如，你需要通过某个函数来初始化它，或者它在某些极端情况下需要被修改），那么它的链接性就需要改变。如果一开始它就在全局命名空间下，你需要主动将其移动到匿名命名空间。而如果一开始就放在匿名命名空间下，那么这个“内部”的意图已经明确，后续的修改会更自然。
+    -   匿名命名空间是处理“内部”实体的 **通用** 机制。今天的 `const` 变量，明天可能是 `static` 变量，后天可能是某个只在该文件中使用的类。将它们都纳入匿名命名空间，可以简化代码的管理。
+
+3.  **处理非 `const` 内部变量 (Handling Non-`const` Internal Variables):**
+    -   Core Guidelines 的建议是 **“for all internal/non-exported entities”**。 这包括了 `static` 变量、非 `const` 全局变量、只在该文件中使用的函数、类等。
+    -   对于 **非 `const`** 的全局变量，如果它们定义在全局命名空间下，它们默认是 **外部链接性** 的。 这就是为什么你**必须**将它们放入匿名命名空间，以限制它们的链接性。
+    -   Core Guidelines 试图建立一个 **统一的规则**，覆盖所有类型的内部实体，而不是为每种实体类型（`const` 变量、`static` 变量、函数等）制定不同的规则。将 `const` 变量也放入匿名命名空间，是为了保持规则的普适性和一致性。
+
+4.  **避免“幻觉” (Avoiding the Illusion of Globlality):**
+    -   虽然 `const` 变量在全局命名空间下的行为是内部链接，但从代码结构上看，它们仍然“看起来”像全局变量。这可能给不熟悉 C++ 链接性细节的开发者带来一种“它就是一个全局变量，但只是不能被修改”的误导。匿名命名空间则更明确地将它们“隔离”在文件作用域内。
+
+**总结**
+
+*   **技术上讲：** 在 `.cpp` 文件中定义的全局命名空间下的 `const` 变量，因为其 `const` 属性，编译器通常会赋予它们内部链接性。从功能上讲，它们已经被限制在当前翻译单元内。
+*   **Core Guidelines 的意图：** SF.22 更强调 **代码的清晰性、可维护性、一致性以及明确表达意图**。将所有内部实体（包括 `const` 变量）放入匿名命名空间，是一种更健壮、更明确、更符合通用模式的做法。它是一种 **风格指南**，旨在提高代码质量，而不是仅仅满足编译器的最低要求。
+
+**所以，即使你的 `const` 变量已经有内部链接性，按照 Core Guidelines 的建议，将其放入匿名命名空间是更推荐的做法。** 这有助于形成更一致的代码风格，并为未来的代码演进提供更好的基础。
+
+一个遵循 SF.22 的例子：
+
+```cpp
+// my_file.cpp
+
+// 匿名命名空间，用于存放所有内部实体
+namespace {
+    const int INTERNAL_CONST_VALUE = 42; // 显式地放在匿名命名空间下
+
+    int internal_variable = 100; // 非 const，也需要匿名命名空间
+
+    void internal_helper_function() {
+        // ...
+    }
+
+    class InternalData {
+        // ...
+    };
+}
+
+void public_function() {
+    // 可以访问内部实体
+    int x = INTERNAL_CONST_VALUE + internal_variable;
+    internal_helper_function();
+    InternalData data;
+}
+
+// 尝试在其他 cpp 文件中访问 INTERNAL_CONST_VALUE 会失败（链接错误）
+```
+
+## C++中函数返回const T&与返回T对比
+
+在C++中，函数返回 `const T&` 与直接返回 `T` 的主要区别如下：
+
+### 1. **语义与拷贝行为**
+
+* **`const T&`**:  
+  返回对象的常量引用，避免拷贝。调用者获得的是对原对象的只读视图，不可修改原对象。要求原对象的生命周期必须长于引用使用时间（如成员变量、全局变量等），否则会导致悬空引用。
+  
+* **`T`**:  
+  返回对象的副本（可能触发拷贝构造或移动构造）。调用者获得独立对象，可自由修改，与原对象无关。
+
+### 2. **性能考量**
+
+* **`const T&`**:  
+  适用于大对象（如容器、复杂类），避免拷贝开销。但需确保引用有效性，否则可能引发未定义行为。
+  
+* **`T`**:  
+  小对象（如内置类型）的直接拷贝成本低，甚至可能比引用更高效。通过返回值优化（RVO/NRVO）或移动语义（C++11+），大对象的拷贝成本也可被显著降低。
+
+### 3. **生命周期与安全性**
+
+* **`const T&`**:  
+  必须绑定到长生命周期对象（如类成员、全局变量）。若返回局部变量的引用，会导致悬空引用。
+  
+* **`T`**:  
+  返回局部对象是安全的，编译器优化（如RVO）可能直接在调用处构造对象，避免拷贝。
+
+### 4. **常量性与封装性**
+
+* **`const T&`**:  
+  保护原对象不被修改，适合封装性要求高的场景（如 `getter` 函数）。
+  
+* **`T`**:  
+  允许调用者修改副本，适合需要独立操作的场景。
+
+### 5. **移动语义与优化**
+
+* **`T`**:  
+  C++11后支持移动语义，若对象可移动，返回 `T` 可能触发移动构造而非拷贝，进一步提升效率。编译器优化（如NRVO）也可能消除拷贝。
+
+### 何时选择？
+
+* **返回`const T&`**:  
+  + 对象较大且需避免拷贝。
+  + 原对象生命周期明确长于引用使用时间。
+  + 需防止调用者修改原对象。
+
+* **返回`T`**:  
+  + 对象较小或编译器优化可消除拷贝（如RVO）。
+  + 需返回局部对象或生成新对象。
+  + 需要调用者拥有独立副本或利用移动语义。
+
+### 示例场景
+
+```cpp
+// 返回const T&：高效获取成员，不可修改
+const std::vector<int>& getData() const { 
+    return m_data; // m_data是类的成员变量
+}
+
+// 返回T：生成新对象，安全独立
+std::vector<int> processData() { 
+    std::vector<int> result;
+    // ...处理逻辑
+    return result; // 可能触发NRVO或移动
+}
+```
+
+### 总结
+
+* **优先返回`T`**：现代C++中，编译器优化和移动语义可降低拷贝开销，且避免悬空引用风险。
+* **谨慎使用`const T&`**：仅在明确需要避免拷贝且能确保引用有效性时使用，如访问长生命周期对象。
+
+## 给sort的二元谓词再加一个参数
+
+为了使 `scene` 作为参数传递到 `Path::compareOrder` 中，可以按照以下步骤修改代码：
+
+1. **修改`compareOrder`函数**：使其接收`scene`作为参数。
+2. **在调用排序时捕获`scene`**：使用lambda表达式捕获`scene`并传递给比较函数。
+
+### 修改后的代码：
+
+```cpp
+// Path类中的比较函数声明
+class Path {
+public:
+    static bool compareOrder(std::shared_ptr<Path> left, std::shared_ptr<Path> right, PlanningScene* scene);
+};
+
+// 比较函数实现
+bool Path::compareOrder(std::shared_ptr<Path> left, std::shared_ptr<Path> right, PlanningScene* scene) {
+    return scene->comparePathOrder(left.get(), right.get());
+}
+
+// 调用排序的函数
+std::unique_ptr<std::vector<std::shared_ptr<Path>>> PathCollection::ascending() {
+    auto orderedPaths = std::make_unique<std::vector<std::shared_ptr<Path>>>(*_items);
+    
+    auto scene = CAMApp::currentWorld->sceneObjects->getPlanningScene();
+    assert(scene);
+    
+    std::sort(orderedPaths->begin(), orderedPaths->end(), 
+        [scene](const std::shared_ptr<Path>& a, const std::shared_ptr<Path>& b) {
+            return Path::compareOrder(a, b, scene);
+        });
+    
+    return orderedPaths;
+}
+```
+
+### 关键改动说明：
+
+* **参数化比较函数**：将`PlanningScene* scene`作为第三个参数添加到`Path::compareOrder`，使其直接使用传入的`scene`。
+* **Lambda捕获`scene`**：在排序时通过lambda捕获当前`scene`，并将其传递给`compareOrder`，避免依赖全局状态。
+* **提升可测试性**：通过参数传递依赖，使得测试时可以轻松注入不同的`scene`实例。
+
+这种方法增强了代码的灵活性和可维护性。
+
+## 复杂初始化
+
+ES.28

@@ -1476,3 +1476,12 @@ int main() {
 }
 
 ```
+
+## 控件不可见时不能确保QWidget::isHidden返回true
+
+To check visibility, use !isVisible() instead (notice the exclamation mark).
+isHidden() implies !isVisible(), but a widget can be not visible and not hidden at the same time. This is the case for widgets that are children of widgets that are not visible.
+
+## 遍历QTreeWdt
+
+QTreeWidgetItemIterator

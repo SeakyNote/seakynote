@@ -179,3 +179,8 @@ https://blog.csdn.net/weixin_44335538/article/details/125263750
 ## vscode格式化设置
 
 Editor: Default Formatter
+
+## 用VS Code打开文件/文件夹
+
+https://cloud.tencent.com/developer/article/2128668
+https://www.cnblogs.com/james2306/p/15563308.html
