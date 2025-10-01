@@ -2182,7 +2182,7 @@ enum class Color {
 #### 🛠️ **适用场景**  
 
 * 当参数是**只读的**且不需要移动语义时。
-* 当处理内置类型（如 `int`,                                            `double`）或**小型对象**时（传值可能更高效，但 `const T&` 仍可接受）。
+* 当处理内置类型（如`int`,`double`）或**小型对象**时（传值可能更高效，但 `const T&` 仍可接受）。
 * 当需要**代码简洁性**和**可读性**时（避免万能引用的复杂规则）。
 
 #### 🌰 示例  
@@ -2249,7 +2249,7 @@ int main() {
 
 * 参数**仅用于读取**，无需转发或修改。
 * 需要代码简洁性，避免万能引用的复杂规则。
-* 处理内置类型或小型对象（如 `int`,                                            `double`）。
+* 处理内置类型或小型对象（如 `int`,`double`）。
 
 #### ✅ **优先选择 `T&&` 的情况**  
 
@@ -2350,7 +2350,6 @@ void process(const T& input) {
 * **含义**：
   + 指针本身是常量（不能修改指针的地址），但指向的对象可修改。
   + 例如：
-
     
 
 ```cpp
@@ -2367,7 +2366,6 @@ void process(const T& input) {
 * **含义**：
   + 指针本身可变（可以修改地址），但指向的对象是常量。
   + 例如：
-
     
 
 ```cpp
@@ -4619,7 +4617,7 @@ This is not harmful and does not fall under this guideline because it does not e
     }
 ```
 
-*   **访问权限:** **可以访问类的 `public`,                                     `protected`, 和 `private` 成员**。它被视为类的“朋友”，绕过了正常的访问控制。
+*   **访问权限:** **可以访问类的 `public`,`protected`,`private`成员**。它被视为类的“朋友”，绕过了正常的访问控制。
 *   **与类的耦合:** 耦合度较高。这个函数直接依赖于类的内部实现细节（私有成员）。如果类的私有成员发生变化，友元函数很可能也需要修改。
 *   **优点:**
     -   可以直接访问私有成员，无需额外的公共 getter 函数。
@@ -4705,7 +4703,6 @@ void anotherFunctionInFile1() {
     -   **如何被其他 `.cpp` 文件调用:** **无法通过名称直接调用**。该函数的名称不会被导出到符号表中供其他 `.cpp` 文件使用。
     -   **优势:** **完全避免了名称冲突**。由于函数名称仅限于当前 `.cpp` 文件内部使用，不会与程序中其他地方（其他 `.cpp` 文件或库）的同名函数发生冲突。
     -   **用途:** 主要用于定义只供当前 `.cpp` 文件内部使用的辅助函数、工具函数或数据。这是现代 C++ 中取代文件作用域 `static` 关键字（用于函数和全局/静态变量）的标准做法。
-
     
 
 ```cpp
@@ -4936,7 +4933,6 @@ void anotherFunction() {
 ### 最佳实践
 
 *   **函数声明放在头文件中，函数定义放在 `.cpp` 文件中。** 这是最常见的做法，可以有效避免 ODR 问题。
-
     
 
 ```cpp
@@ -6073,3 +6069,106 @@ std::unique_ptr<std::vector<std::shared_ptr<Path>>> PathCollection::ascending() 
 ## 复杂初始化
 
 ES.28
+
+## NOMINMAX宏
+
+`NOMINMAX` 是 Windows 编程中常用的一个预处理器宏，它的主要作用是 **阻止 Windows 头文件（如 `<windows.h>` ）自动定义 `min` 和 `max` 这两个宏**。这些宏可能会导致与 C++ 标准库中的 `std::min` 和 `std::max` 函数发生命名冲突。
+
+---
+
+### 为什么需要 `NOMINMAX` ？
+
+1. **Windows 头文件的 `min` 和 `max` 宏**：
+   Windows 头文件（如 `<windows.h>` ）默认会定义如下宏：
+   
+
+```cpp
+   #define min(a, b) ((a) < (b) ? (a) : (b))
+   #define max(a, b) ((a) > (b) ? (a) : (b))
+   ```
+
+   这些宏会替换代码中所有的 `min` 和 `max` 标识符，包括你调用标准库中的 `std::min` 和 `std::max` 。
+
+2. **与 C++ 标准库的冲突**：
+   当使用 `std::min` 或 `std::max` 时，如果这些宏已经被定义，编译器会尝试替换它们，导致编译错误。例如：
+   
+
+```cpp
+   #include <windows.h>
+   #include <algorithm> // std::min 和 std::max 在此声明
+
+   int main() {
+       int a = 1, b = 2;
+       int c = std::min(a, b); // 会被替换成 std::((a) < (b) ? (a) : (b))，语法错误！
+   }
+   ```
+
+---
+
+### 如何使用 `NOMINMAX` ？
+
+在包含 Windows 头文件（如 `<windows.h>` 或 `<windef.h>` ）**之前**，定义 `NOMINMAX` 宏：
+
+```cpp
+#define NOMINMAX
+#include <windows.h>
+#include <algorithm> // 现在可以安全使用 std::min 和 std::max
+
+int main() {
+    int a = 1, b = 2;
+    int c = std::min(a, b); // 正常编译
+}
+```
+
+或者通过编译器选项预定义（如 MSVC 的 `/DNOMINMAX` ）。
+
+---
+
+### 其他替代方法
+
+1. **强制使用函数调用**：
+   用括号包裹 `std::min` 或 `std::max` 的函数名，避免预处理器替换：
+   
+
+```cpp
+   (std::min)(a, b); // 强制编译器解析为函数，而非宏
+   ```
+
+2. **禁用特定宏**：
+   在包含 Windows 头文件后手动取消定义：
+   
+
+```cpp
+   #include <windows.h>
+   #undef min
+   #undef max
+   ```
+
+---
+
+### 总结
+
+| 方法               | 作用                                                         |
+|--------------------|------------------------------------------------------------|
+| `#define NOMINMAX` | 彻底阻止 Windows 头文件定义 `min` 和 `max` 宏，推荐使用        |
+| 括号包裹函数名       | 临时避免宏替换，但代码可读性较差                             |
+| `#undef` | 手动取消宏定义，但需确保在所有相关头文件包含之后操作           |
+
+建议始终在包含 Windows 头文件前定义 `NOMINMAX` ，以保持与 C++ 标准库的兼容性。
+
+## `std::tolower` 传参的坑
+
+```cpp
+std::string str_tolower(std::string s)
+{
+    std::transform(s.begin(), s.end(), s.begin(),
+                // static_cast<int(*)(int)>(std::tolower)         // wrong
+                // [](int c){ return std::tolower(c); }           // wrong
+                // [](char c){ return std::tolower(c); }          // wrong
+                   [](unsigned char c){ return std::tolower(c); } // correct
+                  );
+    return s;
+}
+```
+
+char转int可能为负数，std::tolower会出现未定义行为，lambda传递时需要指定unsigned char
