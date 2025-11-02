@@ -6172,3 +6172,61 @@ std::string str_tolower(std::string s)
 ```
 
 char转int可能为负数，std::tolower会出现未定义行为，lambda传递时需要指定unsigned char
+
+## unique_ptr造成pair构造的问题
+
+```cpp
+#include <iostream>
+#include <memory>
+#include <unordered_map>
+using namespace std;
+
+class SpfFileData {
+    std::unordered_map<int, std::unique_ptr<int>> data;
+};
+
+std::pair<SpfFileData, bool> parse()
+{
+    SpfFileData data;
+    // return { data, true };
+    return { std::move(data), true };
+}
+
+int main()
+{
+    parse();
+}
+```
+
+## 根据字符串创建对应类型派生类对象例子
+
+```cpp
+#include <memory>
+#include <stdexcept>
+#include <string_view>
+#include <unordered_map>
+class BaseClass;
+
+namespace {
+template <typename T>
+std::unique_ptr<BaseClass> createDerivedClass()
+{
+    return std::make_unique<T>();
+}
+
+const std::unordered_map<std::string_view, decltype(&createDerivedClass<AAA>)> typeToCreator {
+    { "aaa", &createDerivedClass<AAA> },
+    { "bbb", &createDerivedClass<BBB> },
+    { "ccc", &createDerivedClass<CCC> }
+};
+} // namespace
+
+std::unique_ptr<BaseClass> createDerivedClass(std::string_view type)
+{
+    if (typeToCreator.count(type)) {
+        return typeToCreator.at(type)();
+    } else {
+        throw std::invalid_argument("unknown type");
+    }
+}
+```

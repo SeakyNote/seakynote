@@ -1485,3 +1485,12 @@ isHidden() implies !isVisible(), but a widget can be not visible and not hidden 
 ## 遍历QTreeWdt
 
 QTreeWidgetItemIterator
+
+## 通过QString进行字符串编码转换
+
+```cpp
+    std::cout << QString::fromLocal8Bit(websocketInputStr.data()).toStdString() << '\n';
+    std::cout << QString::fromUtf8(websocketInputStr.data()).toStdString() << '\n';
+    std::cout << QString::fromLocal8Bit(websocketInputStr.data()).toUtf8().toStdString() << '\n';
+    std::cout << QString::fromUtf8(websocketInputStr.data()).toLocal8Bit().toStdString() << '\n';
+```

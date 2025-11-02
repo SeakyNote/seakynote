@@ -178,3 +178,8 @@ Cpp Core Guidelines 的 "F.8: Prefer pure functions" 是一个重要的原则，
 ## C.140: Do not provide different default arguments for a virtual function and an overrider
 
 ## F.9: Unused parameters should be unnamed
+
+## 成员变量命名规范
+
+派生类成员函数通过get方法获取基类私有成员变量，此时通过这个函数得到的变量不太好命名了
+考虑暂加上基类的前缀
