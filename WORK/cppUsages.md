@@ -2182,7 +2182,7 @@ enum class Color {
 #### 🛠️ **适用场景**  
 
 * 当参数是**只读的**且不需要移动语义时。
-* 当处理内置类型（如`int`,`double`）或**小型对象**时（传值可能更高效，但 `const T&` 仍可接受）。
+* 当处理内置类型（如`int`/`double`）或**小型对象**时（传值可能更高效，但 `const T&` 仍可接受）。
 * 当需要**代码简洁性**和**可读性**时（避免万能引用的复杂规则）。
 
 #### 🌰 示例  
@@ -2249,7 +2249,7 @@ int main() {
 
 * 参数**仅用于读取**，无需转发或修改。
 * 需要代码简洁性，避免万能引用的复杂规则。
-* 处理内置类型或小型对象（如 `int`,`double`）。
+* 处理内置类型或小型对象（如 `int`/`double`）。
 
 #### ✅ **优先选择 `T&&` 的情况**  
 
@@ -2350,7 +2350,6 @@ void process(const T& input) {
 * **含义**：
   + 指针本身是常量（不能修改指针的地址），但指向的对象可修改。
   + 例如：
-    
 
 ```cpp
     testFuncRes1 = new TestCls();   // 错误：指针是常量
@@ -2366,7 +2365,6 @@ void process(const T& input) {
 * **含义**：
   + 指针本身可变（可以修改地址），但指向的对象是常量。
   + 例如：
-    
 
 ```cpp
     testFuncRes2 = new TestCls();   // 合法：指针可变
@@ -4617,7 +4615,7 @@ This is not harmful and does not fall under this guideline because it does not e
     }
 ```
 
-*   **访问权限:** **可以访问类的 `public`,`protected`,`private`成员**。它被视为类的“朋友”，绕过了正常的访问控制。
+*   **访问权限:** **可以访问类的 `public`/`protected`/`private`成员**。它被视为类的“朋友”，绕过了正常的访问控制。
 *   **与类的耦合:** 耦合度较高。这个函数直接依赖于类的内部实现细节（私有成员）。如果类的私有成员发生变化，友元函数很可能也需要修改。
 *   **优点:**
     -   可以直接访问私有成员，无需额外的公共 getter 函数。
@@ -4703,7 +4701,6 @@ void anotherFunctionInFile1() {
     -   **如何被其他 `.cpp` 文件调用:** **无法通过名称直接调用**。该函数的名称不会被导出到符号表中供其他 `.cpp` 文件使用。
     -   **优势:** **完全避免了名称冲突**。由于函数名称仅限于当前 `.cpp` 文件内部使用，不会与程序中其他地方（其他 `.cpp` 文件或库）的同名函数发生冲突。
     -   **用途:** 主要用于定义只供当前 `.cpp` 文件内部使用的辅助函数、工具函数或数据。这是现代 C++ 中取代文件作用域 `static` 关键字（用于函数和全局/静态变量）的标准做法。
-    
 
 ```cpp
 // file1.cpp
@@ -4933,7 +4930,6 @@ void anotherFunction() {
 ### 最佳实践
 
 *   **函数声明放在头文件中，函数定义放在 `.cpp` 文件中。** 这是最常见的做法，可以有效避免 ODR 问题。
-    
 
 ```cpp
     // my_function.h
@@ -6230,3 +6226,131 @@ std::unique_ptr<BaseClass> createDerivedClass(std::string_view type)
     }
 }
 ```
+
+## const/constexpr lambda
+
+const调用时无法修改捕获值，constexpr要求捕获值为constexpr能够编译时求值
+
+```cpp
+//不可调用，或将const移除
+const auto lambda = [n = 2]() mutable { return ++n; };
+
+constexpr int x = 10;
+constexpr auto lambda = [x]() { return x * 2; }; // 合法
+
+int y = 10;
+constexpr auto lambda = [y]() { return y; }; // 错误！y不是constexpr
+```
+
+```cpp
+int main()
+{
+    int x = 0;
+
+    auto lambda1 = [x]() mutable { return ++x; };
+    lambda1(); // 正确：可以修改捕获的x（因为mutable）
+
+    const auto lambda2 = [x]() mutable { return ++x; };
+    lambda2(); // 错误：不能在const对象上调用mutable lambda
+}
+```
+
+代码中 `lambda2` 的调用错误是因为 `const` 对象无法调用非 `const` 成员函数，而 `mutable` 会将lambda的调用运算符( `operator()` )隐式标记为非 `const` 。具体分析如下：
+
+1. **lambda的底层实现**：
+   - 当lambda被标记为 `mutable` 时，其生成的**函数调用运算符( `operator()` )是非 `const` 成员函数**。
+   - 若lambda没有 `mutable` ，则 `operator()` 是 `const` 成员函数。
+
+2. **`lambda2`的冲突**：
+   - `const auto lambda2` 表明 `lambda2` 对象本身是 `const` 的。
+   - 但 `mutable` 使得 `lambda2.operator()` 成为非 `const` 成员函数。
+   - 在C++中，** `const` 对象只能调用 `const` 成员函数**，因此尝试调用非 `const` 的 `operator()` 会引发编译错误。
+
+3. **对比`lambda1`**：
+   - `lambda1` 未被声明为 `const` ，因此可以自由调用非 `const` 的 `operator()` （这正是 `mutable` 的设计目的）。
+
+**修正方案**：
+* 若需要保留`lambda2`的`const`属性，需移除`mutable`关键字（但会失去修改捕获值的能力）。
+* 或者移除`lambda2`的`const`修饰，允许其调用非`const`的`operator()`：
+  
+
+```cpp
+  auto lambda2 = [x]() mutable { return ++x; }; // 去掉const修饰
+  ```
+
+**总结**： `mutable` 使lambda的调用运算符非 `const` ，而 `const` 对象无法调用非 `const` 成员函数。这是C++类型系统对对象常量性的严格保护机制。
+
+## 成员函数内部的constexpr变量通常没有必要声明为static
+
+在C++中，成员函数内部的 `constexpr` 变量通常**没有必要声明为 `static` **。以下是详细分析：
+
+---
+
+### 1. ** `constexpr` 局部变量的特性**
+
+* `constexpr` 局部变量在**编译期**就已确定，其值不可修改。
+* 它们的作用域仅限于函数内部，每次函数调用时理论上会重新创建，但编译器会优化为直接替换为常量值（无运行时开销）。
+* 例如：
+
+```cpp
+void func() {
+    constexpr int x = 42;  // 编译期常量，可能被优化为字面量
+    // ...
+}
+```
+
+---
+
+### 2. ** `static` 的作用**
+
+* `static` 局部变量会在程序的**整个生命周期**内存在（静态存储区），且仅初始化一次。
+* 但对于 `constexpr` 变量来说，这种持久性通常是多余的，因为其值在编译期已固定，无法修改。
+* 例如：
+
+```cpp
+void func() {
+    static constexpr int x = 42;  // 静态存储，但实际行为与非静态无差异
+    // ...
+}
+```
+
+---
+
+### 3. **关键区别**
+
+| 特性        | `constexpr` （非静态） | `static constexpr` |
+| --------- | ---------------- | ------------------ |
+| **存储位置**  | 可能被优化为字面量（无存储）   | 静态存储区（但可能仍被优化）     |
+| **初始化时机** | 每次函数调用（理论上）      | 首次函数调用（仅一次）        |
+| **实际效果**  | 编译期替换，无运行时开销     | 几乎相同，无实际差异         |
+
+---
+
+### 4. **何时使用 `static` ？**
+
+* 仅当需要确保变量在程序的整个生命周期内存在（如需要取地址或与外部代码交互）时，才需要 `static` 。
+* 但对于 `constexpr` 局部变量，这种需求极为罕见，编译器通常会直接优化掉存储。
+
+---
+
+### 5. **结论**
+
+* **默认情况下不需要** `static` ：成员函数中的 `constexpr` 局部变量本身已经是编译期常量，无需额外的静态存储。
+* **特殊情况**：除非明确需要静态生命周期（如必须保留地址），但这种场景几乎不存在于 `constexpr` 变量中。
+
+---
+
+### 示例代码
+
+```cpp
+class MyClass {
+public:
+    void func() {
+        constexpr int x = 10;       // 推荐：编译期常量，无开销
+        static constexpr int y = 20; // 通常无必要，行为与x相同
+        // ...
+    }
+};
+```
+
+尽量保持代码简洁，避免不必要的 `static` 关键字，除非有明确需求。

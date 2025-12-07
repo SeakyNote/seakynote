@@ -138,29 +138,31 @@ Cpp Core Guidelines 的 "F.8: Prefer pure functions" 指导原则的核心在于
 虽然不推荐，但有极少数情况下，你可能需要考虑这种做法，通常是为了**实现一个更严格的、与类实例状态解耦的计算逻辑**：
 
 *   **将计算逻辑从对象中剥离:** 假设你有一个复杂的计算，它 *偶然地* 使用了某个成员变量的值，但这个计算本身也可以独立于对象存在。你可以创建一个**静态成员函数**（没有 `this` 指针）或一个**独立的非成员函数**，并将需要的成员变量作为参数传入。
-    ```c++
-    class MyClass {
-        int data;
-    public:
-        int calculate_something() const {
-            // 传统的成员函数方式
-            return data * 2;
-        }
 
-        // 另一种思考方式：将计算逻辑剥离成一个独立的函数
-        static int calculate_something_pure(int value) {
-            // 这个函数是纯函数
-            return value * 2;
-        }
+```cpp
+class MyClass {
+    int data;
+public:
+    int calculate_something() const {
+        // 传统的成员函数方式
+        return data * 2;
+    }
 
-        int get_data() const { return data; }
-    };
+    // 另一种思考方式：将计算逻辑剥离成一个独立的函数
+    static int calculate_something_pure(int value) {
+        // 这个函数是纯函数
+        return value * 2;
+    }
 
-    // 在类的外部使用独立的纯函数
-    MyClass obj;
-    int result = MyClass::calculate_something_pure(obj.get_data());
-    ```
-    在这个例子中， `calculate_something_pure` 是一个纯函数，它接受一个 `int` 参数并返回一个 `int` 。我们仍然可以通过 `obj.get_data()` 来获取需要的值并传递给它。这并没有改变 `calculate_something` 的成员函数形式，但展示了将纯粹的计算逻辑独立出来的思想。
+    int get_data() const { return data; }
+};
+
+// 在类的外部使用独立的纯函数
+MyClass obj; 
+int result = MyClass::calculate_something_pure(obj.get_data()); 
+```
+
+在这个例子中， `calculate_something_pure` 是一个纯函数，它接受一个 `int` 参数并返回一个 `int` 。我们仍然可以通过 `obj.get_data()` 来获取需要的值并传递给它。这并没有改变 `calculate_something` 的成员函数形式，但展示了将纯粹的计算逻辑独立出来的思想。
 
 *   **测试中的模拟 (Mocking):** 在进行单元测试时，你可能需要模拟成员变量的行为。但通常这通过依赖注入或更高级的测试框架来实现，而不是直接在成员函数签名中修改。
 
@@ -183,3 +185,21 @@ Cpp Core Guidelines 的 "F.8: Prefer pure functions" 是一个重要的原则，
 
 派生类成员函数通过get方法获取基类私有成员变量，此时通过这个函数得到的变量不太好命名了
 考虑暂加上基类的前缀
+
+## "Con.1: By default, make objects immutable"局部变量返回的例外情况
+
+A local variable that is returned by value and is cheaper to move than copy should not be declared const because it can force an unnecessary copy.
+满足两个条件
+* 作为值被返回
+* 移动比拷贝开销更低
+
+相关例子
+
+```cpp
+double positionFromPointTxt(const CAMGraphicsSimpleTextItem& pointTxt, CAMAnimationModel* model, double end_pos)
+{
+    const auto basePos = model->positionFromTime(pointTxt.xStartTime);
+    const auto itemWidth = pointTxt.item->boundingRect().width();
+    return end_pos - basePos < itemWidth ? basePos - itemWidth : basePos;
+}
+```

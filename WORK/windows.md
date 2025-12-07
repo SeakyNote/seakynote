@@ -31,3 +31,5 @@ https://zhuanlan.zhihu.com/p/89106047
 ## win/linux都是f2重命名
 
 ## cmd中tab键可补全字符串
+## windows输入特殊符号
+"字符映射表"程序
