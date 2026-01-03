@@ -142,3 +142,4 @@
   + [基于docsify+GitHub Pages搭建文档网站](share/基于docsify+GitHub%20Pages搭建文档网站.md)
   + [C++中abs函数的坑](share/C++中abs函数的坑.md)
   + [开源分享——Graphviz](share/开源分享——Graphviz.md)
+  + [AI辅助编程方向的探索](share/AI辅助编程方向的探索.md)
