@@ -143,3 +143,4 @@
   + [C++中abs函数的坑](share/C++中abs函数的坑.md)
   + [开源分享——Graphviz](share/开源分享——Graphviz.md)
   + [AI辅助编程方向的探索](share/AI辅助编程方向的探索.md)
+  + [AI编程风险规避](share/AI编程风险规避.md)
