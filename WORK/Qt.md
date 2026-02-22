@@ -1494,3 +1494,75 @@ QTreeWidgetItemIterator
     std::cout << QString::fromLocal8Bit(websocketInputStr.data()).toUtf8().toStdString() << '\n';
     std::cout << QString::fromUtf8(websocketInputStr.data()).toLocal8Bit().toStdString() << '\n';
 ```
+
+## C++/Qt中radio button应该放在什么UI控件中？
+
+在 C++/Qt (主要是 Qt Widgets 模块) 中， `QRadioButton` 最常见、最规范的做法是放入以下两种控件中，具体取决于你是否需要显式的分组框以及你的布局需求：
+
+### 1. `QButtonGroup` (最推荐，逻辑分组)
+
+严格来说， `QButtonGroup` **不是一个可视化的 UI 控件**，而是一个逻辑容器。它是管理 Radio Button 互斥（Exclusivity）的最灵活方式。
+
+*   **为什么用它？**
+    -   它可以把界面上任意位置的 `QRadioButton` 分为一组，实现互斥（即这一组里只能选一个）。
+    -   它不需要把按钮物理上放在同一个父窗口里。
+    -   它提供了方便的信号（Signal），比如 `buttonClicked(int id)`，可以直接告诉你用户选了哪个 ID，不用一个个去查 `isChecked()`。
+*   **代码示例：**
+    
+
+```cpp
+    // 假设你有 btn1, btn2, btn3
+    QButtonGroup *group = new QButtonGroup(this);
+    group->addButton(ui->radioButton1, 1); // 分配 ID 1
+    group->addButton(ui->radioButton2, 2); // 分配 ID 2
+    group->addButton(ui->radioButton3, 3); // 分配 ID 3
+
+    // 连接信号
+    connect(group, &QButtonGroup::idClicked, this, [=](int id){
+        qDebug() << "Selected ID:" << id;
+    });
+    ```
+
+### 2. `QGroupBox` (最常见，可视分组)
+
+这是最传统的**可视化容器**。
+
+*   **为什么用它？**
+    -   它自带一个边框和标题（例如“请选择性别”），视觉上非常清晰。
+    -   **自动互斥：** Qt 的默认机制是，如果多个 `QRadioButton` 拥有同一个父控件（Parent），它们就会自动互斥。把它们都拖进一个 `QGroupBox`，它们天然就是一组。
+*   **适用场景：** 需要在界面上画个框，把选项圈起来的时候。
+*   **注意：** 如果你只是把它们放在一个普通的 `QWidget` 或者 `QFrame` 里，它们也会互斥，但 `QGroupBox` 语义更强。
+
+### 3. 直接放在 `QWidget` / 布局中 (配合 `setAutoExclusive` )
+
+有些时候，你的 UI 设计不需要边框（ `QGroupBox` 的那个框），你只想让它们平铺在界面上。
+
+*   **做法：** 你可以将它们直接放在主窗口或者一个 `QWidget` 容器中。
+*   **隐患：** 如果你把两组 Radio Button（比如“性别”和“难度”）都直接放在同一个父窗口里，Qt 会认为它们是**同一大组**，导致你选了“男性”，结果“困难模式”的勾被取消了。
+*   **解决方法：**
+    1.  使用两个不可见的 `QWidget` 分别装载这两组按钮。
+    2.  或者（更推荐）配合 **方法 1** 中的 `QButtonGroup` 来逻辑分组。
+
+---
+
+### 总结：你应该选哪个？
+
+| 需求场景 | 推荐方案 |
+| :--- | :--- |
+| **视觉上需要边框和标题** | 使用 **`QGroupBox`** (配合布局管理器 QVBoxLayout/QHBoxLayout)。 |
+| **视觉上不需要边框，或者按钮分布零散** | 使用 **`QButtonGroup`** (逻辑分组) + 任意布局。 |
+| **不想写代码，全靠 Qt Designer 拖拽** | 直接拖一个 **`QGroupBox`**，然后把 Radio Button 拖进去。 |
+
+### 最佳实践建议
+
+即使你使用了可视化的 `QGroupBox` ，我通常也建议在代码中再套一层 `QButtonGroup` 。
+
+**理由：** `QGroupBox` 解决了“互斥”和“视觉”问题，但没有解决“取值”问题。如果你不加 Group，你想知道用户选了啥，得写这种代码：
+
+```cpp
+if (ui->rb1->isChecked()) ...
+else if (ui->rb2->isChecked()) ...
+else if (ui->rb3->isChecked()) ...
+```
+
+加了 `QButtonGroup` 并分配 ID 后，你只需要一行代码 `group->checkedId()` 就能拿到结果，代码会极其整洁。
