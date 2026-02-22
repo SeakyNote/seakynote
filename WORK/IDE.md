@@ -169,12 +169,12 @@ https://blog.csdn.net/weixin_44335538/article/details/125263750
 
 ## vscode因C++版本造成的红色波浪线
 
-**配置IntelliSense的C++标准**
-* **打开命令面板**：`Ctrl+Shift+P`（Windows/Linux）或 `Cmd+Shift+P`（macOS）。
-* **输入并选择**：`C/C++: Edit Configurations (UI)`。
-* **设置C++标准**：
-  + 在 **`C++ Standard`** 下拉菜单中选择项目所需的版本（如 `C++17` 或 `C++20`）。
-* **保存配置**：更改后会自动更新到 `.vscode/c_cpp_properties.json`。
+配置IntelliSense的C++标准
+* 打开命令面板：`Ctrl+Shift+P`（Windows/Linux）或 `Cmd+Shift+P`（macOS）。
+* 输入并选择：`C/C++: Edit Configurations (UI)`。
+* 设置C++标准：
+  + 在 `C++ Standard` 下拉菜单中选择项目所需的版本（如 `C++17` 或 `C++20`）。
+* 保存配置：更改后会自动更新到 `.vscode/c_cpp_properties.json`。
 
 ## vscode格式化设置
 

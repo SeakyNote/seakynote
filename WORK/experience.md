@@ -36,19 +36,19 @@ https://norvig.com/21-days.html
 
 你可以用以下几种方式祝贺你的同事跳槽到新公司：
 
-1. **简短祝福：**
+1. 简短祝福：
    “恭喜你跳槽成功！祝你在新公司一切顺利，前程似锦！”
 
-2. **表达支持：**
+2. 表达支持：
    “真为你感到高兴！相信你在新公司一定能大展宏图，如果有需要帮助的地方，随时找我。”
 
-3. **赞美和鼓励：**
+3. 赞美和鼓励：
    “你的能力和才华终于有了更好的展示平台，祝你在新岗位上取得更大的成功！”
 
-4. **个性化祝贺：**
+4. 个性化祝贺：
    “知道你一直希望能够有更多挑战性的工作，现在终于如愿了！期待你在新公司的精彩表现。”
 
-5. **礼物或小卡片：**
+5. 礼物或小卡片：
    如果条件允许，可以送一份小礼物或者贺卡，上面写上你的祝福和鼓励的话。
 
 以上这些方式都可以表达你对同事的祝贺和支持，相信他会非常感动。
@@ -79,12 +79,12 @@ https://norvig.com/21-days.html
 
 ## 使英文字母小写变大写用英文怎么说？
 
-使英文字母小写变大写用英文表达为 **convert lowercase to uppercase** 或 **change lowercase to uppercase**。
+使英文字母小写变大写用英文表达为 convert lowercase to uppercase 或 change lowercase to uppercase。
 
-* **Convert lowercase to uppercase**: 强调将小写字母转换为大写字母的操作。
-* **Change lowercase to uppercase**: 更通俗的说法，指的是将小写字母改成大写字母。
+* Convert lowercase to uppercase: 强调将小写字母转换为大写字母的操作。
+* Change lowercase to uppercase: 更通俗的说法，指的是将小写字母改成大写字母。
 
-另外，编程中常使用 **capitalize**（将首字母大写）或者 **to uppercase**（将所有字母变为大写）。
+另外，编程中常使用 capitalize（将首字母大写）或者 to uppercase（将所有字母变为大写）。
 
 ## 性能调优
 

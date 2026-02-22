@@ -163,7 +163,7 @@ cmake未将头文件加入源码
 
 ### 关键字解释
 
-1. **PRIVATE**
+1. PRIVATE
    - 当你使用 `PRIVATE` 关键字时，链接库只对当前目标可见。这意味着其他链接到该目标的目标不会继承这些链接库。
    - 用法示例：
 
@@ -173,7 +173,7 @@ target_link_libraries(my_target PRIVATE some_library)
 
 在这个例子中， `some_library` 只对 `my_target` 可见，不会传递给任何链接到 `my_target` 的其他目标。
 
-2. **PUBLIC**
+2. PUBLIC
    - 当你使用 `PUBLIC` 关键字时，链接库对当前目标和所有链接到该目标的目标可见。这意味着它们会传播到依赖于当前目标的所有其他目标。
    - 用法示例：
 
@@ -183,7 +183,7 @@ target_link_libraries(my_target PUBLIC some_library)
 
 在这个例子中， `some_library` 对 `my_target` 可见，并且任何链接到 `my_target` 的目标也会看到并链接 `some_library` 。
 
-3. **INTERFACE**
+3. INTERFACE
    - 当你使用 `INTERFACE` 关键字时，链接库只对链接到当前目标的目标可见，而当前目标本身不会链接这些库。通常用于接口库。
    - 用法示例：
 
@@ -201,7 +201,7 @@ target_link_libraries(my_target INTERFACE some_library)
 * `libB` 依赖于 `libA`
 * `app` 依赖于 `libB`
 
-1. **使用 `PRIVATE`**：
+1. 使用 `PRIVATE`：
    
 
 ```cmake
@@ -210,7 +210,7 @@ target_link_libraries(libA PRIVATE some_library)
 
 这种情况下， `libB` 和 `app` 都不会看到 `some_library` ，只有 `libA` 会链接 `some_library` 。
 
-2. **使用 `PUBLIC`**：
+2. 使用 `PUBLIC`：
 
 ```cmake
 target_link_libraries(libA PUBLIC some_library)
@@ -218,7 +218,7 @@ target_link_libraries(libA PUBLIC some_library)
 
 这种情况下， `libB` 会看到并链接 `some_library` ，而 `app` 也会通过 `libB` 继承到 `some_library` 。
 
-3. **使用 `INTERFACE`**：
+3. 使用 `INTERFACE`：
    
 
 ```cmake
@@ -229,9 +229,9 @@ target_link_libraries(libA INTERFACE some_library)
 
 ### 总结
 
-* **PRIVATE**：链接库仅对当前目标可见，不会传播。
-* **PUBLIC**：链接库对当前目标和依赖当前目标的所有目标可见，并传播。
-* **INTERFACE**：链接库对依赖当前目标的所有目标可见，但不链接到当前目标。
+* PRIVATE：链接库仅对当前目标可见，不会传播。
+* PUBLIC：链接库对当前目标和依赖当前目标的所有目标可见，并传播。
+* INTERFACE：链接库对依赖当前目标的所有目标可见，但不链接到当前目标。
 
 选择适当的关键字有助于控制库的可见性和依赖性，确保项目构建的正确性和效率。
 
