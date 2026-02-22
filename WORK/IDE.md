@@ -184,3 +184,16 @@ Editor: Default Formatter
 
 https://cloud.tencent.com/developer/article/2128668
 https://www.cnblogs.com/james2306/p/15563308.html
+
+## VS Code获取当前函数行数
+
+安装插件Selected Lines Count
+Shift+alt+右方向键
+
+## VSCode自动隐藏侧栏和面板
+
+Auto Hide插件
+
+## VS Release版开启黑窗口
+
+配置-链接器-系统-控制台

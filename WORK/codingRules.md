@@ -344,7 +344,7 @@ namespace Chrono {
 
 如果你在使用某个大型应用框架开发，该框架的核心命名空间往往被视为基础库：
 
-*   Qt: 虽然 Qt 通常不使用命名空间隔离核心类（直接是`QString`,`QVector`），但在某些模块中可能存在。
+*   Qt: 虽然 Qt 通常不使用命名空间隔离核心类（直接是`QString` `QVector`），但在某些模块中可能存在。
 *   OpenCV (`using namespace cv;`): 在计算机视觉项目中，几乎每行代码都在处理 `cv::Mat` 或 `cv::imread`。如果在 `.cpp` 文件中大量处理图像算法，`using namespace cv;` 是非常常见的做法。
 *   Eigen (`using namespace Eigen;`): 在重度数学运算或图形学项目中，`Matrix4f`,  `Vector3d` 等类型使用极高频，一直写 `Eigen::` 会非常累赘。
 *   DirectX / Microsoft WRL (`using namespace Microsoft::WRL;`): 在 Windows 这里的 COM 编程中。
@@ -357,7 +357,7 @@ namespace Chrono {
 #### D. 测试框架 ( `using namespace testing;` / `using namespace Catch;` )
 
 *   场景： 在编写单元测试文件时（例如使用 Google Test）。
-*   逻辑： 在测试文件中，`ASSERT_EQ`,`Test`,`InitGoogleTest` 等极其常用，加上命名空间前缀毫无意义且干扰阅读，因此 Google Test 命名空间在测试代码中被视为基础库。
+*   逻辑： 在测试文件中，`ASSERT_EQ` `Test` `InitGoogleTest` 等极其常用，加上命名空间前缀毫无意义且干扰阅读，因此 Google Test 命名空间在测试代码中被视为基础库。
 
 ### 总结与建议
 
@@ -365,3 +365,89 @@ namespace Chrono {
 
 判定一个库是否为 "Foundation Library" 的标准是：
 如果在你的 `.cpp` 文件（注意不是头文件）中，去掉这个命名空间前缀能显著提高代码的可读性，且团队成员都能清楚分辨出这些名字的来源，那么它就可以被当作基础库来处理。
+
+## Item 23: 用非成员非友元函数取代成员函数
+
+https://wizardforcel.gitbooks.io/effective-cpp/content/25.html
+
+## K&R-derived layout与VSCode预设
+
+这是一个非常专业的问题，涉及到代码风格的历史沿革和 Clang-Format 的具体配置。
+
+以下是对 K&R-derived layout 的详细介绍，以及 VSCode 选项中的最佳匹配分析。
+
+---
+
+### 1. 什么是 "K&R-derived layout"?
+
+K&R 风格（K&R Style）源自 C 语言之父 Brian Kernighan 和 Dennis Ritchie 编写的经典教材《C程序设计语言》（The C Programming Language）。
+
+在 C++ 和现代编程中，所谓的 "K&R-derived"（K&R 衍生风格）通常具有以下核心特征：
+
+1.  左大括号的位置（最重要的特征）：
+    -   控制语句（if, while, for, switch）的左大括号 `{` 位于同一行的末尾。
+    -   函数定义的左大括号 `{` 位于下一行的开头（这是最原始的 K&R 规则，虽然现代变体有时会把它也放在同一行）。
+2.  右大括号的位置：
+    -   右大括号 `}` 独占一行，与控制语句的关键字（如 if）对齐。
+3.  主要差异点：
+    -   与 Allman 风格（Visual Studio 默认）形成鲜明对比，Allman 风格要求所有左大括号都换行。
+
+代码示例 (K&R):
+
+```cpp
+// 函数的左大括号在下一行
+int main(int argc, char *argv[])
+{
+    // 控制语句的左大括号在同一行
+    if (x < 0) {
+        printf("Negative");
+    } else {
+        printf("Positive");
+    }
+    return 0;
+}
+```
+
+---
+
+### 2. VSCode 选项分析：哪个最接近？
+
+在 VSCode 的 C/C++ 插件中，格式化设置通常基于 `Clang-Format` 的预设风格（ `BasedOnStyle` ）。
+
+在您提供的选项中：
+Visual Studio、LLVM、 Google、Chromium、Mozilla、WebKit、 Microsoft、GNU
+
+最接近 "K&R-derived layout" 的是：
+
+👉 WebKit
+
+#### 为什么是 WebKit？
+
+我们需要通过排除法和特征匹配来分析：
+
+1.  排除 "换行派" (Allman Style):
+    -   Visual Studio 和 Microsoft：这两种风格倾向于 Allman 风格，即不管是函数还是 `if` 语句，左大括号 `{` 都会强制换行。这是 Windows 开发环境的标准风格，与 K&R 完全相反。
+
+2.  排除 "缩进特立独行派":
+    -   GNU：GNU 风格非常特殊，规定大括号缩进 2 格，而代码块再缩进 2 格。这与 K&R 的视觉布局差异巨大。
+
+3.  排除 "2空格缩进派" (虽然它们属于 K&R 家族):
+    -   LLVM、Google、Chromium、Mozilla：
+    -   这些风格在大括号位置上确实是 K&R 风格（左大括号不换行）。
+    -   但是，它们强制使用 2个空格 进行缩进。
+    -   由于缩进过窄，它们在视觉上与经典的 K&R（通常习惯 4 个或 8 个空格）有较大区别。此外，Google 风格通常要求函数定义的左大括号也在同一行（称为 "Attach"），这属于 K&R 的 "One True Brace Style (1TBS)" 变体，而非原教旨 K&R。
+
+4.  获胜者：WebKit
+    -   缩进：WebKit 使用标准的 4个空格 缩进，这符合大多数 C++ 程序员对 "经典 K&R/Stroustrup" 风格的视觉预期。
+    -   大括号规则：在 `Clang-Format` 的定义中，`BreakBeforeBraces: WebKit` 的行为与 K&R 最为神似：
+        *   它倾向于将函数的大括号换行。
+        *   绝大多数其他块（类、控制流）的大括号保留在同一行。
+    -   这正是 C++ 发明人 Bjarne Stroustrup 所推崇的风格（Stroustrup style 也是 K&R 的一种），因此 WebKit 是这些选项中保留 K&R 原始神韵（区分函数和控制流的大括号位置）且缩进宽度适中的最佳选择。
+
+### 总结
+
+如果您想要一种看起来像经典 C/C++ 教材、使用 4 空格缩进、且 `if` 后面的大括号不换行的风格：
+
+请选择 WebKit。
+
+*注：如果您希望所有的大括号（包括函数）都在同一行，且使用 2 空格缩进，则选择 Google 或 LLVM。*

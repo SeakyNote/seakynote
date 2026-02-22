@@ -186,3 +186,13 @@ git log $START_COMMIT..HEAD --format='%aN' | sort -u | while read name; do
     echo -e "$add_lines\t$name\t$stats";
 done | sort -nr -k1,1 | cut -f2-
 ```
+
+## 找回已drop掉的stash
+
+```sh
+git fsck --lost-found | grep "dangling commit" | awk '{print $3}' | xargs git log -1 --format="%h %ad %s" --date=iso
+```
+
+```sh
+git branch recovered-stash a1b2c3d
+```

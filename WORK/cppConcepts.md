@@ -2602,7 +2602,7 @@ int main() {
 
 ### 与 `std::move` 的区别
 
-| `std::forward`                          | `std::move`                     |
+| `std::forward` | `std::move` |
 |---------------------------------------------|-------------------------------------|
 | 有条件转换（依赖模板参数 `T` ）               | 无条件转换为右值                   |
 | 用于通用引用（ `T&&` ）的完美转发              | 用于明确需要转移所有权的场景        |
@@ -3010,7 +3010,7 @@ Point p2{3, 4};     // C++11起支持的直接列表初始化
 *   舍入误差 (Rounding Errors): 在进行浮点运算时，结果可能会因为无法精确表示而被舍入到最接近的可表示数。
 *   精度限制 (Precision Limits): 两个非常接近的实数可能在浮点表示中是同一个数，或者它们的微小差异无法被精确捕获。
 
- `std::numeric_limits<T>::epsilon()` 主要用来做什么？
+`std::numeric_limits<T>::epsilon()` 主要用来做什么？
 
 它最常见的用途是帮助比较浮点数是否“相等”。
 
@@ -4262,7 +4262,7 @@ int main()
 
 *   访问私有数据（`private` / `protected`）： 如果函数必须直接读写类的私有成员变量，且不能通过现有的公开接口（Getters/Setters）完成，它通常需要是成员函数。
 *   虚函数（Virtual Functions）： 如果你需要多态行为（即函数行为取决于运行时的对象类型），它必须是成员函数。
-*   特定运算符重载：`operator=`,`operator()`,`operator[]`,`operator->`必须是成员函数。
+*   特定运算符重载：`operator=` `operator()` `operator[]` `operator->`必须是成员函数。
 *   构造函数与析构函数： 显然必须是成员函数。
 
 ### 2. 推荐使用非成员辅助函数的情况
@@ -4363,7 +4363,7 @@ namespace Web {
 
 在 C++ 中，在头文件中直接声明与定义 `constexpr` 函数，前面不加 `inline` 关键字是完全没有问题的。
 
-实际上，`constexpr` 关键字在函数（和变量模板/静态数据成员）上隐式地包含了 `inline` 的含义。
+实际上， `constexpr` 关键字在函数（和变量模板/静态数据成员）上隐式地包含了 `inline` 的含义。
 
 以下是详细解释：
 
@@ -4478,7 +4478,7 @@ inline constexpr int MAX_VALUE = 100; // C++17
 *   结果： 链接器会进行合并（ODR 机制）。无论多少个 .cpp 包含它，整个程序中只有一份 `MAX_VALUE` 的实例。
 *   地址唯一性： 所有 .cpp 文件中看到的 `&MAX_VALUE` 都是同一个地址。
 
-建议： 对于简单的 `int` , `float` 常量，加不加 `inline` 区别不大（编译器通常会优化掉内存分配，直接用立即数）。但对于大型对象（如大数组、结构体），为了避免代码膨胀，强烈建议加上 `inline`  (C++17)。
+建议： 对于简单的 `int` , `float` 常量，加不加 `inline` 区别不大（编译器通常会优化掉内存分配，直接用立即数）。但对于大型对象（如大数组、结构体），为了避免代码膨胀，强烈建议加上 `inline` (C++17)。
 
 ---
 
@@ -4850,7 +4850,7 @@ const char* literal = "Hello";
     };
 ```
 
-当实例化 `Vector<int>` 时， `push_back` 的参数已经确定为`int&&` ，不需要在调用 `push_back` 时推导。因此它是右值引用。
+当实例化 `Vector<int>` 时， `push_back` 的参数已经确定为 `int&&` ，不需要在调用 `push_back` 时推导。因此它是右值引用。
 
 *   正例（函数模板）：
     
@@ -4902,7 +4902,7 @@ const char* literal = "Hello";
 
 ### 5. 为什么要区分？
 
-区分它们的目的是为了正确使用 `std::move` 和 `std::forward`：
+区分它们的目的是为了正确使用 `std::move` 和 `std::forward` ：
 *   如果是右值引用，你应该使用 `std::move()`（无条件转为右值）。
 *   如果是通用引用，你必须使用 `std::forward<T>()`（完美转发，保留原始类型的左/右值属性）。
 
@@ -4984,3 +4984,156 @@ int main() {
 ## 在大多数 STL 算法中，Lambda 的参数接收的是“解引用后的元素”，而不是“迭代器本身”
 
 在 STL 算法（如 any_of, for_each, find_if）中，算法内部已经帮你做了解引用操作（ `*first` ），并将解引用后的值传给了你的 Lambda。
+
+## 名字查找先于重载决议
+
+为什么以下C++代码中，直接在testFunc2的实现下调用 `testFunc(2);` 编译不通过，没有自动找到单参数的模板函数？而调用 `::testFunc(2);` 却可以？
+
+```cpp
+#include <iostream>
+using namespace std;
+
+struct TestCls {
+    void testFunc() { }
+    void testFunc2();
+};
+
+template <typename T>
+void testFunc(T val)
+{
+    cout << val << '\n';
+}
+
+void TestCls::testFunc2()
+{
+    ::testFunc(2); // OK
+    testFunc(2); // NOK
+}
+
+int main()
+{
+    TestCls cls;
+    cls.testFunc2();
+}
+```
+
+这是一个非常经典的C++名字查找（Name Lookup）规则导致的问题。
+
+简单来说，原因在于 名字查找先于重载决议（Overload Resolution），且内部作用域的名字会隐藏外部作用域的同名名字。
+
+以下是详细的步骤解析：
+
+### 1. 名字查找的步骤
+
+当你调用 `testFunc(2)` 时，编译器需要确定 `testFunc` 指的是谁。它的查找顺序是由内向外的：
+
+1.  当前块作用域（`testFunc2` 函数内部）：没有找到。
+2.  类作用域（`TestCls` 类内部）：找到了！ 类中定义了 `void testFunc() { }`。
+
+### 2. 名字隐藏（Hiding）
+
+C++ 的规则是：一旦编译器在某个作用域中找到了匹配的名字（不管参数是否匹配），它就会停止向外层作用域（全局作用域）继续查找。
+
+*   编译器在 `TestCls` 中找到了名为 `testFunc` 的成员函数。
+*   因此，它彻底忽略了外部全局作用域中那个接受参数的模板函数 `testFunc`。这就好像全局的那个函数被类成员函数“遮挡”或“隐藏”了一样。
+
+### 3. 重载决议与报错
+
+现在编译器只看到了类成员 `TestCls::testFunc` 。接下来它尝试匹配参数：
+*   候选者：`void TestCls::testFunc()` (成员函数，0个参数)
+*   调用者提供的：`(2)` (1个 int 参数)
+
+结论：参数数量不匹配。编译器报错：“函数调用参数过多”或者“没有匹配的函数”，因为它根本没有把全局那个刚好接受一个参数的函数纳入候选列表。
+
+---
+
+### 为什么 `::testFunc(2)` 可以？
+
+当你写 `::testFunc(2)` 时，前面的 `::` （作用域解析运算符）明确告诉编译器：不要在当前局部作用域或类作用域中查找，直接去全局命名空间查找。
+
+此时：
+1.  编译器直接去全局找。
+2.  找到了 `template <typename T> void testFunc(T val)`。
+3.  参数匹配成功（T 推导为 int），编译通过。
+
+### 总结
+
+这就是 C++ 的设计原则：Name Lookup happens before Overload Resolution（名字查找发生在重载决议之前）。
+
+*   编译不通过的代码：编译器在类里找到了名字，于是停止查找，试图用类成员函数去匹配参数 `2`，失败。
+*   修正方法：
+    1.  使用 `::testFunc(2)` 显式调用全局函数。
+    2.  或者，这也是更推荐的做法：避免类成员函数和全局函数重名，以防止混淆。
+
+## C++中虚函数定义在基类private中，在派生类public中override这个函数可以吗？
+
+简单来说：在 C++ 中这样做是完全可以的，且语法上是合法的。
+
+这种做法涉及到 C++ 的两个不同机制：访问控制（Access Control）和动态绑定（Virtual Function Binding）。
+
+### 1. 为什么这可以运行？
+
+*   访问控制（private/public）是在编译时检查的。它决定了你是否能通过某个类类型的指针或对象直接调用该成员。
+*   虚函数机制（虚表/多态）是在运行时决定的。
+
+当你通过基类指针调用虚函数时，编译器只检查基类中该函数的可访问性。一旦通过检查，程序在运行时会根据虚函数表找到派生类的实现，而不会在运行时再次检查派生类的访问权限。
+
+### 2. 代码示例
+
+```cpp
+#include <iostream>
+
+class Base {
+private:
+    virtual void show() { // 基类中是私有的
+        std::cout << "Base::show()" << std::endl;
+    }
+
+public:
+    void delegate() {
+        show(); // 基类内部可以正常调用
+    }
+    virtual ~Base() {}
+};
+
+class Derived : public Base {
+public:
+    void show() override { // 派生类中改为公有，并重写
+        std::cout << "Derived::show()" << std::endl;
+    }
+};
+
+int main() {
+    Derived d;
+    d.show(); // 合法：在 Derived 中是 public
+
+    Base* ptr = &d;
+    // ptr->show(); // 编译错误！在 Base 中 show 是 private
+
+    ptr->delegate(); // 打印 "Derived::show()"：多态依然有效
+    return 0;
+}
+```
+
+### 3. 不同场景下的表现
+
+*   通过派生类对象调用：如果派生类将其设为 `public`，你可以直接调用它（如 `d.show()`）。
+*   通过基类指针调用：即便实际指向的是 `public` 的派生类对象，也无法通过基类指针直接调用（如 `ptr->show()` 报错），因为编译器在编译阶段看的是基类的接口（那是 `private` 的）。
+*   多态依然工作：如上面的 `delegate()` 函数所示，即使基类是在其内部调用 `private virtual` 函数，它依然能够正确触发派生类的 `public` 重写版本。
+
+### 4. 设计模式中的应用：NVI 模式
+
+这种“基类虚函数为私有”的做法实际上是一种常见的设计模式，称为 NVI (Non-Virtual Interface) 模式。
+
+*   核心理念：将接口（Public Interface）与实现（Implementation Details）分离。
+*   做法：
+    1.  基类提供一个 `public` 的非虚函数作为对外接口。
+    2.  基类在此接口内部调用一个 `private` 或 `protected` 的虚函数。
+    3.  派生类重写该虚函数以提供具体逻辑。
+*   优点：基类可以在调用子类逻辑前后做一些统一的操作（如加锁、写日志、参数校验等），而子类只需要专注逻辑实现。
+
+### 总结
+
+*   可行性：可以。
+*   访问权限：取决于你手里的指针/引用类型，而不是对象的实际类型。
+*   最佳实践：如果你希望子类重写但又不希望外部直接从基类访问，设为 `private` 是合理的；如果你希望子类能调用父类的实现，则应设为 `protected`。

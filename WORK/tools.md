@@ -615,3 +615,8 @@ word进行类似操作没有问题
     -   再次点击顶部菜单栏的 “编码 (Encoding)”。
     -   关键点：选择 “使用 UTF-8 编码 (Encode in UTF-8)”。
     -   注意： 千万不要点“转为... (Convert to...)”，一定要点 “使用... (Encode in...)”。
+
+## AI图片检测
+
+Illuminarty
+https://hivemoderation.com/ai-generated-content-detection
