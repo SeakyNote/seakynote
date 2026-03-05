@@ -110,6 +110,8 @@
   + [婚姻和爱情能平衡么](PsychologyOfLove/婚姻和爱情能平衡么.md)
   + [失恋是一种病](PsychologyOfLove/失恋是一种病.md)
 * 工作与学习经验
+  * [2026年2月](monthly_work_exp/202602.md)
+* 工作与学习经验(归档)
   + [C++理论](WORK/cppConcepts.md)
   + [C++用法](WORK/cppUsages.md)
   + [C++"新"特性](WORK/cppNewFeatures.md)
