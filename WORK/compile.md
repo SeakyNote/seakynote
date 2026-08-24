@@ -94,7 +94,7 @@ https://stackoverflow.com/questions/20448102/why-does-visual-studio-2013-issue-a
 
 * 作用：链接器通过读取`.ilk`文件中的信息，了解哪些部分需要重新链接，从而避免不必要的工作，提高编译速度。
 
-* 管理：`.ilk
+* 管理：`.ilk`
 
 ## 启用/O2优化对调试有什么影响？为什么debug模式默认不使用/O2优化？
 

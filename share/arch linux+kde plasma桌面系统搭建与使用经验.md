@@ -14,7 +14,7 @@
 - 社区发行版，不受到商业公司裹挟，隐私保护也更好
 - 遵循KISS原则，非OOTB，适合折腾和学习
 
-![](assets/distro.png)
+![Linux 发行版选择示意图](assets/distro.png)
 关于arch linux中文介绍见此页面：
 
 https://wiki.archlinuxcn.org/wiki/Arch_Linux
@@ -25,7 +25,7 @@ https://wiki.archlinuxcn.org/wiki/Arch_Linux
 - 主流桌面环境中唯一一个对分数缩放支持较好的
 
 kde plasma桌面截图：
-![](assets/屏幕截图_20240922_221551.png)
+![KDE Plasma 桌面截图](assets/屏幕截图_20240922_221551.png)
 关于kde plasma中文介绍见此页面：
 
 https://kde.org/zh-cn/plasma-desktop/
@@ -49,7 +49,7 @@ https://kde.org/zh-cn/plasma-desktop/
 - 配置网络（如在虚拟机环境，可忽略）
 	- 使用iwctl，具体可参考 https://linux.cn/article-15067-1.html
 - 输入`archinstall`启动安装脚本（不嫌麻烦可以根据archwiki手动安装配置）
-- 进入安装选项，选择Mirrors-Mirror region-China，然后Back回退（后续选择选择后均Back回退至安装选项目录）
+- 进入安装选项，选择Mirrors-Mirror region-China，然后Back回退（后续选择后均Back回退至安装选项目录）
 - 选择Locale-Locale language-zh_CN.UTF-8（按需选择，需要其它系统语言均可）
 - 选择Disk configuration-Partitioning-第一项-选择要安装linux系统的硬盘-选择btrfs格式（对其它几个格式有了解也可以按需选择）-yes-Use compression（按需选择是否要使用压缩和写时复制）
 - Boot loader确保为grub
@@ -166,7 +166,7 @@ drm kernel mode设置
 - 按照说明添加内核变量
 
 我电脑上是：
-```
+```conf
 options nvidia_drm modeset=1
 options nvidia_drm fbdev=1
 ```
@@ -197,7 +197,7 @@ alias unproxy="unset http_proxy;unset https_proxy"
 ### vscode安装
 安装开源版本`sudo pacman -S code`
 
-获取获取vscode市场`yay -S  code-marketplace`
+获取 vscode 市场：`yay -S code-marketplace`
 ### 机箱风扇控制：fancontrol-gui
 ### 在wayland中使用qt软件
 安装qt5-wayland及qt6-wayland包
@@ -211,7 +211,7 @@ alias unproxy="unset http_proxy;unset https_proxy"
 参考：https://fcitx-im.org/wiki/Using_Fcitx_5_on_Wayland#Chromium_.2F_Electron
 ### chroot相关
 参考：https://wiki.archlinux.org/title/Chroot
-```
+```bash
 # mount -o subvol=@ /dev/sdXY /mnt
 # mount -o subvol=@home /dev/sdXY /mnt/home
 # mount -o subvol=@pkg /dev/sdXY /mnt/var/cache/pacman/pkg

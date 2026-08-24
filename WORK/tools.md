@@ -53,7 +53,7 @@ https://blog.csdn.net/Ellen_Tangxiang/article/details/128913882
 
 ## graphviz模板
 
-```
+```dot
 digraph template{
     fontname = "SimHei";
     node [penwidth=3, fontname="SimHei"];

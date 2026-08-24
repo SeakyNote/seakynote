@@ -38,4 +38,4 @@ https://moonvy.com/blog/post/2021/Looking-at-SVG-in-2022/
 
 ## emf格式矢量图转png
 
-使用截图方法。。
+使用截图方法。

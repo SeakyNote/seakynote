@@ -8,12 +8,12 @@ int main()
 }
 ```
 在linux下通过g++ (GCC) 14.2.1 编译或在windows下通过mingw11.2编译，运行结果：
-```
+```text
 1
 1.5
 ```
 在windows下通过vs2022编译，运行结果：
-```
+```text
 1.5
 1.5
 ```

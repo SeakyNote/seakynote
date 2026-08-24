@@ -570,7 +570,7 @@ int main() {
 
 输出结果可能是：
 
-```
+```text
 str: 
 str2: Hello, World!
 ```
@@ -689,7 +689,7 @@ int main() {
 
 #### 输出：
 
-```
+```text
 Constructor called
 Move Constructor called
 Destructor called, releasing memory
@@ -755,7 +755,7 @@ int main() {
 
 #### 输出：
 
-```
+```text
 Constructor called
 Constructor called
 Move Assignment called

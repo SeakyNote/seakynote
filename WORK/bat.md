@@ -70,7 +70,7 @@ dir /b /s /a-d
 ## bat递归删除目录下的build文件夹
 
 如果你希望删除特定目录下，包括子目录中所有名称为 "build" 的文件夹，可以使用适当的批处理命令。以下是一个示例：
-```
+```bat
 for /d /r %%i in (build) do (
     if exist "%%i" (
         rd /s /q "%%i"
@@ -250,4 +250,3 @@ rem echo This will NOT be executed
 ```
 
 以上这些方法都可以有效地终止批处理脚本的执行，同时保留之前的输出记录。
-

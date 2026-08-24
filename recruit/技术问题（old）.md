@@ -107,7 +107,7 @@ struct/class区别
 
 介绍下标准库容器中end成员函数返回迭代器的含义及其常见用法
 
-各顺序容器的特点和使用场景——vector/list/arrary
+各顺序容器的特点和使用场景——vector/list/array
 
 为什么引用不像指针一样区分顶层const和底层const
 

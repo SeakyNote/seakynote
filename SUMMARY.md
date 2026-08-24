@@ -61,7 +61,7 @@
   + [32.自说明代码](CodeComplete/32.自说明代码.md)
   + [33.个人性格](CodeComplete/33.个人性格.md)
   + [34.关于软件匠艺](CodeComplete/34.关于软件匠艺.md)
-* 《Effectivs Modern C++》
+* 《Effective Modern C++》
   + [简介](EffectiveModernCpp/0.Introduction.md)
   + [类型推导](EffectiveModernCpp/1.DeducingTypes.md)
   + [auto](EffectiveModernCpp/2.Auto.md)

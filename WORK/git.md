@@ -102,7 +102,7 @@ repository Settings，第三个勾
 
 检出节点时直接报external filter git-lfs filter-process failed
 
-```
+```bash
 git lfs install --skip-smudge
 切换节点
 git lfs pull
@@ -111,7 +111,7 @@ git lfs install --force
 
 ## 合并时报fatal: You have not concluded your merge(MERGE_HEAD exists)
 
-```
+```bash
 $:git merge --abort
 $:git reset --merge
 $:git pull
@@ -130,13 +130,13 @@ $:git pull
 * 需要指定remote
   + 如git lfs pull origin
 
-## Gitee 自已提交的代码提交人头像为他人、码云上独自开发的项目显示为 2 个开发者
+## Gitee 自己提交的代码提交人头像为他人、码云上独自开发的项目显示为 2 个开发者
 
 https://blog.csdn.net/jiangyu1013/article/details/97630479
 
 ## git设置对文件大小写敏感
 
-```
+```ini
 [core]
 	ignorecase = false
 ```

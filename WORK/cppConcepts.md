@@ -145,7 +145,7 @@ int main() {
 
 ## switch语句中必须有default选项吗？
 
-switch语句中不是必须有default选项的。switch语句首先会找满足条件的case值做为执行后面的程序入口，若所有的case都不满足，则找default入口，若未找到则退出整个语句；default只是一个备用入口，有没有都无所谓。
+switch语句中不是必须有default选项的。switch语句首先会找满足条件的case值作为执行后面的程序入口，若所有的case都不满足，则找default入口，若未找到则退出整个语句；default只是一个备用入口，有没有都无所谓。
 
 ## NULL/nullptr
 
@@ -301,7 +301,7 @@ int main() {
 
 ## c++版本
 
-![](cppConcepts.assets/cpp-v.png)
+![C++ 标准版本与 __cplusplus 值对照](cppConcepts.assets/cpp-v.png)
 
 `__cplusplus` 是一个预定义的宏，用于在 C++ 程序中表示编译器所遵循的 C++ 标准的版本号。这个宏的值是一个整数，代表编译器所遵循的 C++ 标准的年份。通过检查 `__cplusplus` 的值，可以在代码中进行条件编译，以确保代码在不同版本的 C++ 标准下能够正确编译和执行。
 
@@ -3686,7 +3686,7 @@ int main() {
 
 输出：
 
-```
+```text
 Hello from publicGreet!
 Hello from privateGreet!
 Hello from publicGreet!

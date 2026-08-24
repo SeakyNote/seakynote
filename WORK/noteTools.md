@@ -24,11 +24,11 @@ TypeError: cb.apply is not a function 注释对应代码62-64行
   + ctrl+左键打开
   + | 后面能加别名
 * 建立关联：出链-当前笔记中潜在的链接
-* 嵌入![[cheetSheet]]
+* 嵌入![[cheatSheet]]
 * `[[^^]]`搜索链接
 * `#`标签
 * ==高亮==
-* [另一种链接和嵌入方式](cheetSheet)
+* [另一种链接和嵌入方式](../cheatSheet.md)
 
 ## 无法加载文件 C:\Users\xxx\AppData\Roaming\npm\docsify.ps1，因为在此系统上禁止运行脚本。
 

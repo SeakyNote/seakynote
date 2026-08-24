@@ -18,7 +18,7 @@ C++ Primer关于此问题：在指针即将要离开其作用域之前释放掉�
 
 `#` 构串操作符: 将#右边内容转化为字符串
 
-##合并操作符: ##左右直接拼接
+`##` 合并操作符：将左右内容直接拼接
 
 ## C++中的dynamic_cast和dynamic_pointer_cast
 
@@ -208,7 +208,7 @@ bitset转数字 `retVal = b.to_ulong();`
 
 ## 输出运行时间
 
-```
+```cpp
 #define OutputTime														\
 	qDebug()<<"//---------------calc time------------------------\n"	\
 			<<__func__<<" "<<__LINE__<<" "								\
@@ -267,7 +267,7 @@ https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/head
 
 ## 如何理解queue不能基于vector构造？
 
-```
+```cpp
     vector<int> vec{1,2,3};
     queue<int, vector<int>> q3{vec};
     q3.pop();//加上这行编译就出问题了
@@ -1438,7 +1438,7 @@ int main() {
 
 ### 运行结果
 
-```
+```text
 General template: 3.14
 Non-template overload for int: 42
 ```
@@ -2164,7 +2164,7 @@ enum class Color {
 
 通过使用下划线分隔单词，可以使代码更具有一致性和可读性，特别是在处理较长的标识符时。这种命名风格在很多编程语言和代码库中都是一种常见的约定。
 
-## 模板函数中T类型参数仅作为输入参数时应使用 `const T&` 还是 `T&&` （说法1）
+## 模板函数中T类型参数仅作为输入参数时应使用 `const T&` 还是 `T&&` （说法1）
 
 在模板函数中，当类型参数 `T` 仅作为输入参数（只读不修改）时，应优先选择 `const T&` ，但在特定场景下 `T&&` （万能引用）可能是更好的选择。以下是详细分析：
 
@@ -2279,7 +2279,7 @@ int main() {
 
 根据具体需求权衡选择，优先遵循最小复杂性原则（能用 `const T&` 时，不用 `T&&` ）。
 
-## 模板函数中T类型参数仅作为输入参数时应使用 `const T&` 还是 `T&&` （说法2）
+## 模板函数中T类型参数仅作为输入参数时应使用 `const T&` 还是 `T&&` （说法2）
 
 在模板函数中，当类型参数 `T` 仅作为输入参数时，推荐使用 `const T&` ，原因如下：
 
@@ -2318,7 +2318,7 @@ void wrapper(T&& arg) {
 
 优先使用 `const T&` ，仅在需要完美转发时选择 `T&&` 。对于仅输入的参数， `const T&` 在保证性能的同时更简洁安全。
 
-## 模板函数中T类型参数仅作为输入参数时应使用 `const T&` 还是 `T&&` （说法3）
+## 模板函数中T类型参数仅作为输入参数时应使用 `const T&` 还是 `T&&` （说法3）
 
 当模板函数中的参数仅用于输入（即只读、不需要移动或修改）时，使用 const T& 更合适。这种方式有以下优点：
 
@@ -5188,7 +5188,7 @@ void MyClass<T>::myFunction(T value) {
 
 此时若在其他文件中使用 `MyClass<int>` ，会导致链接错误：
 
-```
+```text
 undefined reference to `MyClass<int>::myFunction(int)`
 ```
 
@@ -5333,7 +5333,7 @@ int main() {
 
 ### 输出结果
 
-```
+```text
 Default implementation for double
 Specialized implementation for int
 ```
@@ -7013,7 +7013,7 @@ printString(std::string(sv.data(), sv.size()));
 优点：
 *   直接访问权： 可以直接访问类内部的所有 `private` 和 `protected` 成员（成员变量和成员函数），不需要显式通过参数传递 `this` 指针。
 *   逻辑归属感： 语义上明确该功能是“类的一部分”，符合面向对象封装的直觉。
-*   虚函数支持： 私有函数可以是虚函数（`virtual`），允许子类重写实现某些内部逻辑（模版方法模式）。
+*   虚函数支持： 私有函数可以是虚函数（`virtual`），允许子类重写实现某些内部逻辑（模板方法模式）。
 
 缺点：
 *   头文件污染： 即便是私有的，也必须写在 `.h` 文件中。这意味着：

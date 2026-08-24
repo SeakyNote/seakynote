@@ -11,7 +11,7 @@ project，形如
 
 启用测试功能
 
-```
+```cmake
 include(CTest)
 enable_testing()
 ```
@@ -74,14 +74,14 @@ https://blog.csdn.net/qq_33835370/article/details/120224455
 
 ## cmake关键语句
 
-```
+```cmake
 cmake_minimum_required(VERSION 3.5)
 project(TwsOnePlatform VERSION 0.1.0)
 ```
 
 add_subdirectory 添加子目录
 
-```
+```cmake
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)

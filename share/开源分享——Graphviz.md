@@ -3,9 +3,9 @@ Graphviz 是一种开源的图形可视化软件。图形可视化是一种将�
 ## 功能
 Graphviz 布局程序使用一种简单的文本语言描述图形，并生成有用格式的图表，例如网页上的图像和 SVG 格式；用于插入其他文档的 PDF 或 Postscript；或在交互式图形浏览器中展示。Graphviz 提供了许多实用的功能来绘制具体图表，例如颜色、字体、表格节点布局、线条样式、超链接以及自定义形状等选项。
 ## 例子
-![](assets/gvExample.svg)
+![Graphviz 示例图](assets/gvExample.svg)
 通过graphviz由以下dot代码生成上图：
-```
+```dot
 file name: example.gv
 digraph example{
     fontname = "SimHei";

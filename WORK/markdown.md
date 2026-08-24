@@ -4,9 +4,7 @@ https://blog.csdn.net/xdg15294969271/article/details/120176955
 
 ## markdown中如何输入尖括号？
 
-使用 ` `  ` &lt;  `  `  ` 和 ` ` `&gt; 
-
-```
+使用 `&lt;` 和 `&gt;`
 
 ## 两种链接形式
 
@@ -53,7 +51,7 @@ https://blog.csdn.net/xdg15294969271/article/details/120176955
 
 ## markdown添加图片
 
-```
+```markdown
 
 ![可填可不填](文件路径)
 

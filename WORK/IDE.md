@@ -20,7 +20,7 @@ qt tools
 
 qt configuration
 
-launch qt creator 右键根据项目打开qtctrator cmake/pro/ui
+启动 Qt Creator，右键根据项目打开 CMake/Pro/UI 文件
 
 qml
 
@@ -30,7 +30,7 @@ qml
 "doxdocgen.generic.authorName":"Seaky",
 "doxdocgen.generic.authorTag":"@author      {author}",
 "doxdocgen.file.customTag":[
-    "@license      Private Lisense, XXX"
+    "@license      Private License, XXX"
 ],
 "doxdocgen.file.fileOrder":[
     "copyright",
