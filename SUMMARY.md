@@ -149,6 +149,7 @@
   * [2026年5月](monthly_work_exp/202605.md)
   * [2026年6月](monthly_work_exp/202606.md)
   * [2026年7月](monthly_work_exp/202607.md)
+  * [2026年8月](monthly_work_exp/202608.md)
 * 工作与学习经验(归档)
   + [C++理论](WORK/cppConcepts.md)
   + [C++用法](WORK/cppUsages.md)
