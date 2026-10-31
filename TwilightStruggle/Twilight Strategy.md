@@ -359,3 +359,106 @@ T1头条
 #### As US
 
 尽快打出，否则东欧不好占
+
+### De Gaulle Leads France
+#### As USSR
+头条打出
+#### As US
+好处理的牌
+### Captured Nazi Scientist
+约等于2VP
+### Truman Doctrine
+#### As USSR
+这张牌没打出之前，不要轻易打和美国的行动点消耗战。
+摸到就尽快打出，防止罗马尼亚先打出
+#### As US
+可考虑最后行动轮整点活，然后下个回合头条打出
+### Olympic Games
+当2点牌打
+### NATO
+#### As USSR
+尽早打掉
+#### As US
+4 OP
+### Independent Reds
+#### As USSR
+尽早打出
+#### As US
+2点牌
+
+### Marshall Plan
+#### As USSR
+飞太空
+#### As US
+前期强牌
+### Indo-Pakistani War
+影响印巴
+### Containment
+#### As USSR
+末动打出
+#### As US
+强力头条
+### CIA Created
+#### As USSR
+前期找机会打出，或AR1打出
+#### As US
+前期考虑当点打出，或者T1头条事件
+### US/Japan Mutual Defense Pact
+#### As USSR
+按需当点打出
+#### As US
+一般当点打出
+### Suez Crisis
+#### As USSR
+T1强力头条，否则是点数
+#### As US
+视情况飞太空或撕掉
+### East European Unrest
+#### As USSR
+前中期点数，后期飞
+#### As US
+第七回合抽到，则尽力保留到下一回合
+### Decolonization
+#### As USSR
+神牌
+#### As US
+设法留到T3，飞掉
+### Red Scare/Purge
+强，四神
+### UN Intervention
+功能牌
+### De-Stalinization
+#### As USSR
+神牌
+#### As US
+设法留到T3，飞掉
+### Nuclear Test Ban
+升核用来处理降核牌，否则点数
+### Formosan Resolution
+#### As USSR
+点数，除非3:3
+#### As US
+点数
+### Defectors
+#### As USSR
+考虑是否头条红恐，可以考虑头劣势计分
+#### As US
+强力头条，考虑苏联太空竞赛
+### The Cambridge Five
+#### As USSR
+弱头条
+#### As US
+危害不大
+### Special Relationship
+#### As USSR
+视北约控制情况而定
+#### As US
+点数，北约后事件
+### NORAD
+#### As USSR
+飞掉
+#### As US
+点，除非泥潭已打出且回合较早
+## Brush War
+
+
